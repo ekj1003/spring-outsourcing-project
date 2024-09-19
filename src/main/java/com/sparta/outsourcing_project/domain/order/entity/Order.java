@@ -1,18 +1,15 @@
 package com.sparta.outsourcing_project.domain.order.entity;
 
-import com.sparta.outsourcing_project.domain.common.Status;
+import com.sparta.outsourcing_project.domain.order.dto.OrderRequestDto;
+import com.sparta.outsourcing_project.domain.order.enums.Status;
 import com.sparta.outsourcing_project.domain.common.Timestamped;
 import com.sparta.outsourcing_project.domain.menu.entity.Menu;
-import com.sparta.outsourcing_project.domain.review.entity.Review;
 import com.sparta.outsourcing_project.domain.store.entity.Store;
 import com.sparta.outsourcing_project.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -21,7 +18,7 @@ public class Order extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_id")
+    @Column(name = "orderId")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -40,4 +37,12 @@ public class Order extends Timestamped {
 
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    public Order(User user, Menu menu, Store store){
+        this.user = user;
+        this.menu = menu;
+        this.store = store;
+        this.price = 10000;//menu.getPrice(); 임시
+    }
+
 }
