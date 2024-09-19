@@ -17,7 +17,7 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
-    @Column(length = 150, nullable = false)
+    @Column(length = 150, nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
@@ -31,4 +31,8 @@ public class User {
     private Boolean isDeleted; // isDeleted 값을 false로 초기화
 
     private Integer store_number;
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
 }

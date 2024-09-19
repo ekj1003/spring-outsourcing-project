@@ -16,6 +16,7 @@ import java.util.Map;
 public class AllExceptionHandler {
 
 
+
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<Map<String, Object>> handleResponseStatusException(ResponseStatusException e) {
         Map<String, Object> responseBody = new HashMap<>();
