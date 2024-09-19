@@ -1,18 +1,14 @@
 package com.sparta.outsourcing_project.domain.order.entity;
 
-import com.sparta.outsourcing_project.domain.common.Status;
+import com.sparta.outsourcing_project.domain.order.enums.Status;
 import com.sparta.outsourcing_project.domain.common.Timestamped;
 import com.sparta.outsourcing_project.domain.menu.entity.Menu;
-import com.sparta.outsourcing_project.domain.review.entity.Review;
 import com.sparta.outsourcing_project.domain.store.entity.Store;
 import com.sparta.outsourcing_project.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter

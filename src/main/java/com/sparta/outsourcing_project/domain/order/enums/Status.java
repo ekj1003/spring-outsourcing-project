@@ -1,4 +1,4 @@
-package com.sparta.outsourcing_project.domain.common;
+package com.sparta.outsourcing_project.domain.order.enums;
 
 public enum Status {
     ORDERED,
