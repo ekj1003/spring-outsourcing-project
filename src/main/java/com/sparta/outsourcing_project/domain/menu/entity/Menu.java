@@ -33,4 +33,22 @@ public class Menu {
     @Column(nullable = false)
     @ColumnDefault("false")
     private Boolean isDeleted;
+
+    public Menu(Store store, String name, Integer price, String description) {
+        this.store = store;
+        this.name = name;
+        this.price = price;
+        this.description = description;
+        this.isDeleted = false;
+    }
+
+    public void updateMenu(String name, Integer price, String description) {
+        this.name = name;
+        this.price = price;
+        this.description = description;
+    }
+
+    public void setIsDeleted(Boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
 }

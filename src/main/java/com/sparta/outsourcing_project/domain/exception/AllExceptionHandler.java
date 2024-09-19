@@ -25,6 +25,32 @@ public class AllExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
     }
 
+    @ExceptionHandler(CannotFindMenuException.class)
+    public ResponseEntity<Map<String, Object>> handleCannotFindMenuException(CannotFindMenuException ex) {
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("message", ex.getMessage());
+        responseBody.put("status", HttpStatus.NOT_FOUND.value());
+        responseBody.put("timestamp", LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
+    }
+
+    @ExceptionHandler(CannotFindStoreException.class)
+    public ResponseEntity<Map<String, Object>> handleCannotFindStoreException(CannotFindStoreException ex) {
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("message", ex.getMessage());
+        responseBody.put("status", HttpStatus.NOT_FOUND.value());
+        responseBody.put("timestamp", LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
+    }
+
+    @ExceptionHandler(OwnerNotAuthorizedException.class)
+    public ResponseEntity<Map<String, Object>> handleOwnerNotAuthorizedException(OwnerNotAuthorizedException ex) {
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("message", ex.getMessage());
+        responseBody.put("status", HttpStatus.FORBIDDEN.value());
+        responseBody.put("timestamp", LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(responseBody);
+    }
 
 
 
