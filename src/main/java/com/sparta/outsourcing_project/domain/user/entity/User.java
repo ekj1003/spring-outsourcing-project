@@ -1,6 +1,6 @@
 package com.sparta.outsourcing_project.domain.user.entity;
 
-import com.sparta.outsourcing_project.domain.common.UserType;
+import com.sparta.outsourcing_project.domain.user.enums.UserType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
