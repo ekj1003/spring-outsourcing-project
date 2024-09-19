@@ -1,6 +1,7 @@
 package com.sparta.outsourcing_project.domain.exception;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,14 +16,13 @@ import java.util.Map;
 @RestControllerAdvice
 public class AllExceptionHandler {
 
-
-    @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<Map<String, Object>> handleResponseStatusException(ResponseStatusException e) {
+    @ExceptionHandler(CannotFindOrderId.class)
+    public ResponseEntity<Map<String, Object>> CannotFindOrderId(CannotFindOrderId ex) {
         Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("message", e.getReason());
-        responseBody.put("status", e.getStatusCode().value());
+        responseBody.put("message", ex.getMessage());
+        responseBody.put("status", HttpStatus.NOT_FOUND.value());
         responseBody.put("timestamp", LocalDateTime.now());
-        return ResponseEntity.status(e.getStatusCode()).body(responseBody);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
     }
 
 
