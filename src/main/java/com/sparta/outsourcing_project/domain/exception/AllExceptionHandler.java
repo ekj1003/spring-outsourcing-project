@@ -1,14 +1,17 @@
 package com.sparta.outsourcing_project.domain.exception;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @RestControllerAdvice
@@ -87,11 +90,16 @@ public class AllExceptionHandler {
         return buildResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler
+    public ResponseEntity<Map<String, Object>> handleValidationException(MethodArgumentNotValidException ex) {
+        return buildResponse(Objects.requireNonNull(ex.getBindingResult().getFieldError()).getDefaultMessage(), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleAllException(Exception ex) {
+    public ResponseEntity<Map<String, Object>> handleAllException(Exception ex) {
         log.error(ex + ": " +ex.getMessage());
         ex.printStackTrace();
-        return new ResponseEntity<>("Error: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return buildResponse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
