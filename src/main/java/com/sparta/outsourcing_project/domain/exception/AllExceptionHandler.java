@@ -32,9 +32,24 @@ public class AllExceptionHandler {
         return buildResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(CannotFindStoreIdException.class)
+    public ResponseEntity<Map<String, Object>> cannotFindStoreIdException(CannotFindStoreIdException ex) {
+        return buildResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(AuthException.class)
     public ResponseEntity<Map<String, Object>> authException(AuthException ex) {
         return buildResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MaxStoreLimitException.class)
+    public ResponseEntity<Map<String, Object>> maxStoreLimitException(MaxStoreLimitException ex) {
+        return buildResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<Map<String, Object>> handleUnauthorizedAccessException(UnauthorizedAccessException ex) {
+        return buildResponse(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler
@@ -73,4 +88,5 @@ public class AllExceptionHandler {
         // e.printStackTrace()
         return new ResponseEntity<>("Error: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
 }

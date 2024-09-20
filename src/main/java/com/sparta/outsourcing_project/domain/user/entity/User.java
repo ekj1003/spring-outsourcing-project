@@ -1,5 +1,6 @@
 package com.sparta.outsourcing_project.domain.user.entity;
 
+import com.sparta.outsourcing_project.config.authUser.AuthUser;
 import com.sparta.outsourcing_project.domain.user.enums.UserType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -37,7 +38,29 @@ public class User {
         this.userType = userType;
     }
 
+    private User(Long id, String email, UserType userType) {
+        this.id = id;
+        this.email = email;
+        this.userType = userType;
+    }
+
     public void changePassword(String password) {
         this.password = password;
+    }
+
+    public static User fromAuthUser(AuthUser authUser) {
+        return new User(authUser.getId(), authUser.getEmail(), authUser.getUserType());
+    }
+
+    public void incrementStoreNumber() {
+        if (this.store_number == null) {
+            this.store_number = 1;
+        } else {
+            this.store_number++;
+        }
+    }
+
+    public void decrementStoreNumber() {
+        this.store_number--;
     }
 }
