@@ -13,13 +13,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/owners")
 @RequiredArgsConstructor
 public class StoreOwnerController {
 
     private final StoreOwnerService storeOwnerService;
 
     // 가게 생성
-    @PostMapping("owners/stores")
+    @PostMapping("/stores")
     public ResponseEntity<StoreResponseDto> saveStore(
             @Auth AuthUser authUser,
             @Valid @RequestBody StoreRequestDto storeRequestDto
@@ -28,7 +29,7 @@ public class StoreOwnerController {
     }
 
     // 가게 수정
-    @PatchMapping("owners/stores/{storeId}")
+    @PatchMapping("/stores/{storeId}")
     public ResponseEntity<StoreResponseDto> patchStore (
             @Auth AuthUser authUser,
             @PathVariable("storeId") Long storeId,
