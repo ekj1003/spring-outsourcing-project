@@ -11,22 +11,35 @@ import com.sparta.outsourcing_project.domain.store.entity.Store;
 import com.sparta.outsourcing_project.domain.store.repository.StoreRepository;
 import com.sparta.outsourcing_project.domain.user.dto.response.UserResponseDto;
 import com.sparta.outsourcing_project.domain.user.entity.User;
+import com.sparta.outsourcing_project.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class StoreOwnerService {
     private final StoreRepository storeRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public StoreResponseDto saveStore(AuthUser authUser, StoreRequestDto storeRequestDto) {
-        User user = User.fromAuthUser(authUser);
+        // userRepository에서 직접 user entity 가져오기
+        User user = userRepository.findById(authUser.getId())
+                .orElseThrow(() -> new UnauthorizedAccessException("사용자를 찾을 수 없습니다."));
+
+        // 찾은 user로 storeRepository에서 user를 column으로 가진 store 리스트로 가져오기
+        List<Store> stores = storeRepository.findByUser(user);
+
 
         // 사장님이 운영할 수 있는 가게 수가 3개 초과인지 확인
-        if (user.getStore_number() >= 3) {
+        if (stores.size() >= 3) {
             throw new MaxStoreLimitException("사장님은 가게를 최대 3개까지만 운영할 수 있습니다.");
         }
 
@@ -42,6 +55,7 @@ public class StoreOwnerService {
 
         // 가게 저장 후 가게 수 증가
         user.incrementStoreNumber();
+        userRepository.save(user);
 
         return new StoreResponseDto(
                 savedStore.getId(),
@@ -49,7 +63,6 @@ public class StoreOwnerService {
                 savedStore.getOpenAt(),
                 savedStore.getCloseAt(),
                 savedStore.getMinPrice(),
-                savedStore.getIsDeleted(),
                 new UserResponseDto(user.getId(), user.getEmail())
         );
     }
