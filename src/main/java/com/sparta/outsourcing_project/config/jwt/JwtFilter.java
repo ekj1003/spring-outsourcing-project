@@ -1,6 +1,7 @@
 package com.sparta.outsourcing_project.config.jwt;
 
 import com.sparta.outsourcing_project.domain.exception.JwtException;
+import com.sparta.outsourcing_project.domain.exception.UnauthorizedAccessException;
 import com.sparta.outsourcing_project.domain.user.enums.UserType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -29,10 +30,6 @@ public class JwtFilter implements Filter {
         return !PatternMatchUtils.simpleMatch(whitelist, url);
     }
 
-    private boolean mustBeOwner(String method, String url, List<String> protectedMethods, String protectedPath) {
-        return protectedMethods.contains(method) && url.startsWith(protectedPath);
-    }
-
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         Filter.super.init(filterConfig);
@@ -44,7 +41,6 @@ public class JwtFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         String url = request.getRequestURI();
-        String method = request.getMethod();
 
         if(!isLoginCheckPath(url)) {
             filterChain.doFilter(request, response);
@@ -69,16 +65,13 @@ public class JwtFilter implements Filter {
             request.setAttribute("email", claims.get("email"));
             request.setAttribute("userType", claims.get("userType"));
 
-            List<String> protectedMethods = Arrays.asList("PATCH", "POST");
-            String protectedPath = "/stores";
+            UserType userType = UserType.valueOf(claims.get("userType", String.class));
 
-            if (mustBeOwner(method, url, protectedMethods, protectedPath)) {
-                UserType userType = UserType.of(claims.get("userType", String.class));
-                if(!UserType.OWNER.equals(userType)) {
-                    throw new JwtException("가게 주인만이 가게를 생성하거나 수정 및 삭제할 수 있습니다.");
-                }
-                filterChain.doFilter(request, response);
-                return;
+            if(url.startsWith("/customers") && !userType.equals(UserType.CUSTOMER)) {
+                throw new UnauthorizedAccessException("손님 전용 페이지입니다.");
+            }
+            if(url.startsWith("/owners") && !userType.equals(UserType.OWNER)) {
+                throw new UnauthorizedAccessException("사업자 전용 페이지입니다.");
             }
 
             filterChain.doFilter(request, response);
