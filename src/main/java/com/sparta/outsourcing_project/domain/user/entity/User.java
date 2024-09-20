@@ -53,11 +53,8 @@ public class User {
     }
 
     public void incrementStoreNumber() {
-        if (this.store_number == null) {
-            this.store_number = 1;
-        } else {
-            this.store_number++;
-        }
+        this.store_number++;
+
     }
 
     public void decrementStoreNumber() {
