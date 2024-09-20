@@ -1,6 +1,8 @@
 package com.sparta.outsourcing_project.domain.order.service;
 
-import com.sparta.outsourcing_project.domain.exception.CannotFindOrderIdException;
+import com.sparta.outsourcing_project.config.authUser.AuthUser;
+import com.sparta.outsourcing_project.domain.exception.*;
+import com.sparta.outsourcing_project.domain.menu.repository.MenuRepository;
 import com.sparta.outsourcing_project.domain.order.dto.OrderPatchRequestDto;
 import com.sparta.outsourcing_project.domain.order.dto.OrderRequestDto;
 import com.sparta.outsourcing_project.domain.order.dto.OrderResponseDto;
@@ -10,11 +12,14 @@ import com.sparta.outsourcing_project.domain.menu.entity.Menu;
 import com.sparta.outsourcing_project.domain.review.repository.ReviewRepository;
 import com.sparta.outsourcing_project.domain.store.entity.Store;
 
+import com.sparta.outsourcing_project.domain.store.repository.StoreRepository;
 import com.sparta.outsourcing_project.domain.user.entity.User;
+import com.sparta.outsourcing_project.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,29 +29,40 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final ReviewRepository reviewRepository;
+    private final UserRepository userRepository;
+    private final MenuRepository menuRepository;
+    private final StoreRepository storeRepository;
 
-    public OrderResponseDto createOrder(OrderRequestDto orderRequestDto) {
-        // 로그인 하면 user 자동으로 들어옴
-        User user = null;
-        // 메뉴 id로 메뉴 찾고, storeid로 store 찾아서 넣어야 함;
-        Menu menu = null; // 임시로 사용
-        Store store = null; // 임시로 사용
+    public OrderResponseDto createOrder(AuthUser authUser, OrderRequestDto orderRequestDto) {
+        User user = userRepository.findById(authUser.getId()).orElseThrow();
+        Menu menu = menuRepository.findByIdAndStoreId(orderRequestDto.getMenuId(), orderRequestDto.getStoreId());
+        if (menu == null) {
+            throw new CannotFindMenuException();
+        }
+        Store store = storeRepository.findById(orderRequestDto.getStoreId()).orElseThrow(CannotFindStoreException::new);
 
-        Order order = new Order(user, menu, store);
+        // 현재 영업시간인지 확인하기
+        if(LocalTime.now().isBefore(store.getOpenAt()) || LocalTime.now().isAfter(store.getCloseAt()) ) {
+            throw new NotOpenException();
+        }
+
+        int price = menu.getPrice();
+
+        Order order = new Order(user, menu, store, price);
 
         return new OrderResponseDto(orderRepository.save(order));
     }
 
-    public OrderResponseDto getOneOrder(Long orderId) {
-        Order findOrder = orderRepository.findById(orderId).orElseThrow(CannotFindOrderIdException::new);
+    public OrderResponseDto getOneOrder(AuthUser authUser, Long orderId) {
+        Order findOrder = orderRepository.findByIdAndUserId(orderId, authUser.getId());
         if(findOrder.getIsDeleted()){
             throw new CannotFindOrderIdException();
         }
         return new OrderResponseDto(findOrder);
     }
 
-    public List<OrderResponseDto> getAllOrders() {
-        List<Order> findOrders = orderRepository.findAll();
+    public List<OrderResponseDto> getAllOrders(AuthUser authUser) {
+        List<Order> findOrders = orderRepository.findAllByUserId(authUser.getId());
         List<OrderResponseDto> orderResponseDtoList = new ArrayList<>();
         for (Order findOrder : findOrders) {
             if (!findOrder.getIsDeleted()){
@@ -57,8 +73,12 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderResponseDto patchOrder(Long orderId, OrderPatchRequestDto orderPatchRequestDto) {
+    public OrderResponseDto patchOrder(AuthUser authUser, Long orderId, OrderPatchRequestDto orderPatchRequestDto) {
         Order order = orderRepository.findById(orderId).orElseThrow(CannotFindOrderIdException::new);
+
+        if (authUser.getId() != order.getUser().getId()) {
+            throw new UnauthorizedAccessException("작성자가 아닙니다.");
+        }
 
         // ture면 soft delete
         if (orderPatchRequestDto.getIs_deleted()) {
@@ -68,9 +88,7 @@ public class OrderService {
         }
 
         // 메뉴 찾기
-        // Menu menu = menuRepository.findByIdw(orderPatchRequestDto.getMenuId());
-        // 임시로 사용
-        Menu menu = null;
+        Menu menu = menuRepository.findById(orderPatchRequestDto.getMenuId()).orElseThrow(CannotFindMenuException::new);
         Order patchOrder = order.patchOrder(menu);
         return new OrderResponseDto(patchOrder);
     }
