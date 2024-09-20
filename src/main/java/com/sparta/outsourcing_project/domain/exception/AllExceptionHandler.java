@@ -25,6 +25,15 @@ public class AllExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
     }
 
+    @ExceptionHandler(CannotFindReviewId.class)
+    public ResponseEntity<Map<String, Object>> ConnotFindReviewId(CannotFindReviewId ex) {
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("message", ex.getMessage());
+        responseBody.put("status", HttpStatus.NOT_FOUND.value());
+        responseBody.put("timestamp", LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
+    }
+
 
 
 
