@@ -5,7 +5,8 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -22,6 +23,9 @@ public class Menu {
     @JoinColumn(name = "store_id", nullable = false)
     private Store store;
 
+//    @OneToMany(mappedBy = "store", fetch = FetchType.LAZY)
+//    private List<Menu> menus;
+
     @Column(length = 255)
     private String name;
 
@@ -31,6 +35,23 @@ public class Menu {
     private String description;
 
     @Column(nullable = false)
-    @ColumnDefault("false")
-    private Boolean isDeleted;
+    private Boolean isDeleted = false;
+
+    public Menu(Store store, String name, Integer price, String description) {
+        this.store = store;
+        this.name = name;
+        this.price = price;
+        this.description = description;
+        this.isDeleted = false;
+    }
+
+    public void updateMenu(String name, Integer price, String description) {
+        this.name = name;
+        this.price = price;
+        this.description = description;
+    }
+
+    public void setIsDeleted() {
+        this.isDeleted = true;
+    }
 }
