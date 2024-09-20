@@ -16,7 +16,9 @@ import java.util.stream.Collectors;
 public class MenuCustomerService {
     private final MenuRepository menuRepository;
 
-    public List<MenuResponse> getStoreWithMenus(Long storeId) {
+    // 가게 ID로 메뉴 목록을 조회하는 메서드
+    public List<MenuResponse> getStoreWithMenus(Long storeId, Long userId) {
+        // 가게 ID와 삭제되지 않은 메뉴들 조회
         List<Menu> menus = menuRepository.findAllByStoreIdAndIsDeletedFalse(storeId);
         return menus.stream()
                 .map(MenuResponse::new)

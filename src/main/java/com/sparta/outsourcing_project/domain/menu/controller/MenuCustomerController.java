@@ -1,5 +1,7 @@
 package com.sparta.outsourcing_project.domain.menu.controller;
 
+import com.sparta.outsourcing_project.config.authUser.Auth;
+import com.sparta.outsourcing_project.config.authUser.AuthUser;
 import com.sparta.outsourcing_project.domain.menu.dto.response.MenuResponse;
 import com.sparta.outsourcing_project.domain.menu.service.MenuCustomerService;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +21,8 @@ public class MenuCustomerController {
 
     // Retrieve Store with Menus
     @GetMapping
-    public ResponseEntity<List<MenuResponse>> getStoreWithMenus(@PathVariable Long storeId) {
-        List<MenuResponse> menus = menuCustomerService.getStoreWithMenus(storeId);
+    public ResponseEntity<List<MenuResponse>> getStoreWithMenus(@PathVariable Long storeId, @Auth AuthUser authUser) {
+        List<MenuResponse> menus = menuCustomerService.getStoreWithMenus(storeId, authUser.getId());
         return ResponseEntity.ok(menus);
     }
 }
