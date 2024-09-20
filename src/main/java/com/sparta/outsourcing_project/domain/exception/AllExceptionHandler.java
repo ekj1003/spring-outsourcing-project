@@ -25,6 +25,41 @@ public class AllExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     @ExceptionHandler(CannotFindMenuException.class)
     public ResponseEntity<Map<String, Object>> handleCannotFindMenuException(CannotFindMenuException ex) {
         Map<String, Object> responseBody = new HashMap<>();
@@ -51,8 +86,6 @@ public class AllExceptionHandler {
         responseBody.put("timestamp", LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(responseBody);
     }
-
-
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleAllException(Exception ex) {
