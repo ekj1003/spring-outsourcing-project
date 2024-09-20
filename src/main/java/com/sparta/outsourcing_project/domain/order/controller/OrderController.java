@@ -1,5 +1,8 @@
 package com.sparta.outsourcing_project.domain.order.controller;
 
+import com.sparta.outsourcing_project.config.anno.InfoAnnotation;
+import com.sparta.outsourcing_project.config.authUser.Auth;
+import com.sparta.outsourcing_project.config.authUser.AuthUser;
 import com.sparta.outsourcing_project.domain.order.dto.OrderPatchRequestDto;
 import com.sparta.outsourcing_project.domain.order.dto.OrderRequestDto;
 import com.sparta.outsourcing_project.domain.order.dto.OrderResponseDto;
@@ -20,27 +23,28 @@ public class OrderController {
     private final OrderService orderService;
     private final OrderRepository orderRepository;
 
+    @InfoAnnotation
     @PostMapping
-    public ResponseEntity<OrderResponseDto> createOrder(@RequestBody OrderRequestDto orderRequestDto) {
-        OrderResponseDto orderResponseDto = orderService.createOrder(orderRequestDto);
+    public ResponseEntity<OrderResponseDto> createOrder(@Auth AuthUser authUser, @RequestBody OrderRequestDto orderRequestDto) {
+        OrderResponseDto orderResponseDto = orderService.createOrder(authUser, orderRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(orderResponseDto);
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<OrderResponseDto> getOneOrder(@PathVariable("orderId") Long orderId) {
-        OrderResponseDto orderResponseDto = orderService.getOneOrder(orderId);
+    public ResponseEntity<OrderResponseDto> getOneOrder(@Auth AuthUser authUser, @PathVariable("orderId") Long orderId) {
+        OrderResponseDto orderResponseDto = orderService.getOneOrder(authUser, orderId);
         return ResponseEntity.status(HttpStatus.OK).body(orderResponseDto);
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderResponseDto>> getAllOrder() {
-        List<OrderResponseDto> orders = orderService.getAllOrders();
+    public ResponseEntity<List<OrderResponseDto>> getAllOrder(@Auth AuthUser authUser) {
+        List<OrderResponseDto> orders = orderService.getAllOrders(authUser);
         return ResponseEntity.status(HttpStatus.OK).body(orders);
     }
 
     @PatchMapping("/{orderId}")
-    public ResponseEntity<OrderResponseDto> patchOrder(@PathVariable("orderId") Long orderId, @RequestBody OrderPatchRequestDto orderPatchRequestDto){
-        OrderResponseDto orderResponseDto = orderService.patchOrder(orderId, orderPatchRequestDto);
+    public ResponseEntity<OrderResponseDto> patchOrder(@Auth AuthUser authUser, @PathVariable("orderId") Long orderId, @RequestBody OrderPatchRequestDto orderPatchRequestDto){
+        OrderResponseDto orderResponseDto = orderService.patchOrder(authUser, orderId, orderPatchRequestDto);
         if(orderResponseDto == null) {
             return ResponseEntity.status(HttpStatus.OK).body(null);
         }
