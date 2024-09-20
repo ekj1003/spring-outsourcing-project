@@ -1,7 +1,7 @@
 package com.sparta.outsourcing_project.config.jwt;
 
-import com.sparta.outsourcing_project.domain.exception.JwtException;
 import com.sparta.outsourcing_project.domain.exception.UnauthorizedAccessException;
+import com.sparta.outsourcing_project.domain.exception.UserRequestException;
 import com.sparta.outsourcing_project.domain.user.enums.UserType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -15,8 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.PatternMatchUtils;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -50,7 +48,8 @@ public class JwtFilter implements Filter {
         String bearerJwt = request.getHeader("Authorization");
 
         if(bearerJwt == null || !bearerJwt.startsWith("Bearer ")) {
-            throw new JwtException("JWT 토큰이 필요합니다.");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "JWT 토큰이 필요합니다.");
+            return;
         }
 
         String jwt = jwtUtil.substringToken(bearerJwt);
@@ -58,7 +57,8 @@ public class JwtFilter implements Filter {
         try {
             Claims claims = jwtUtil.extractClaim(jwt);
             if(claims == null) {
-                throw new JwtException("잘못된 JWT 토큰입니다.");
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "잘못된 JWT 토큰입니다.");
+                return;
             }
 
             request.setAttribute("userId", Long.parseLong(claims.getSubject()));
@@ -68,25 +68,27 @@ public class JwtFilter implements Filter {
             UserType userType = UserType.valueOf(claims.get("userType", String.class));
 
             if(url.startsWith("/customers") && !userType.equals(UserType.CUSTOMER)) {
-                throw new UnauthorizedAccessException("손님 전용 페이지입니다.");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "손님 전용 페이지입니다.");
+                return;
             }
             if(url.startsWith("/owners") && !userType.equals(UserType.OWNER)) {
-                throw new UnauthorizedAccessException("사업자 전용 페이지입니다.");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "사업자 전용 페이지입니다.");
+                return;
             }
 
             filterChain.doFilter(request, response);
         } catch (SecurityException | MalformedJwtException e) {
             log.error("Invalid JWT signature: ", e);
-            throw new JwtException("Invalid JWT signature.");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT signature.");
         } catch (ExpiredJwtException e) {
             log.error("Expired JWT signature: ", e);
-            throw new JwtException("Expired JWT signature.");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Expired JWT signature.");
         } catch (UnsupportedJwtException e) {
             log.error("Unsupported JWT signature: ", e);
-            throw new JwtException("Unsupported JWT signature.");
-        } catch(Exception e) {
-            log.error("Invalid JWT token: ", e);
-            throw new JwtException("Invalid JWT token.");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unsupported JWT signature.");
+        } catch (Exception e) {
+            log.error("Invalid JWT Token", e);
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid JWT Token.");
         }
     }
 
