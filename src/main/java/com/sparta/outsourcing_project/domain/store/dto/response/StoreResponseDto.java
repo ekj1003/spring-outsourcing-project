@@ -1,10 +1,12 @@
 package com.sparta.outsourcing_project.domain.store.dto.response;
 
+import com.sparta.outsourcing_project.domain.menu.dto.response.MenuListResponseDto;
 import com.sparta.outsourcing_project.domain.store.entity.Store;
 import com.sparta.outsourcing_project.domain.user.dto.response.UserResponseDto;
 import lombok.Getter;
 
 import java.time.LocalTime;
+import java.util.List;
 
 @Getter
 public class StoreResponseDto {
@@ -15,7 +17,7 @@ public class StoreResponseDto {
     private final Integer minPrice;
     private final Boolean isDeleted;
     private final UserResponseDto user;
-    // private List<MenuResponseDto> menus; // 메뉴 목록 추가
+    private List<MenuListResponseDto> menuList;
 
 
     public StoreResponseDto(Long id, String name, LocalTime openAt, LocalTime closeAt, Integer minPrice, Boolean isDeleted, UserResponseDto user) {
