@@ -3,6 +3,7 @@ package com.sparta.outsourcing_project.domain.review.entity;
 import com.sparta.outsourcing_project.domain.common.Timestamped;
 import com.sparta.outsourcing_project.domain.order.entity.Order;
 import com.sparta.outsourcing_project.domain.review.dto.ReviewRequestDto;
+import com.sparta.outsourcing_project.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -27,11 +28,16 @@ public class Review extends Timestamped {
     @JoinColumn(name = "order_id")
     private Order order;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    public Review(Order findOrder, ReviewRequestDto reviewService) {
+
+    public Review(User newUser, Order findOrder, ReviewRequestDto reviewService) {
         content = reviewService.getContent();
         star = reviewService.getStar();
         order = findOrder;
+        user = newUser;
     }
 
     public Review patchReview(ReviewRequestDto reviewRequestDto) {

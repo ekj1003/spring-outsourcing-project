@@ -82,6 +82,11 @@ public class AllExceptionHandler {
         return buildResponse(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 
+    @ExceptionHandler(NotOpenException.class)
+    public ResponseEntity<Map<String, Object>> notOpenException(NotOpenException ex) {
+        return buildResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleAllException(Exception ex) {
         log.error(ex + ": " +ex.getMessage());

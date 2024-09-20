@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface MenuRepository extends JpaRepository<Menu, Long> {
     List<Menu> findAllByStoreIdAndIsDeletedFalse(Long storeId);
+
+    Menu findByIdAndStoreId(Long id, Long menuId);
 }
