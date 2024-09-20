@@ -58,6 +58,7 @@ public class JwtFilter implements Filter {
         }
 
         String jwt = jwtUtil.substringToken(bearerJwt);
+        log.info("jwt : {}", jwt);
 
         try {
             Claims claims = jwtUtil.extractClaim(jwt);

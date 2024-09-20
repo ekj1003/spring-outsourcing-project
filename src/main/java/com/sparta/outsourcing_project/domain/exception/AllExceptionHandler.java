@@ -37,6 +37,16 @@ public class AllExceptionHandler {
         return buildResponse(ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler
+    public ResponseEntity<Map<String, Object>> exception(UserRequestException ex) {
+        return buildResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Map<String, Object>> authenticationFailedException(AuthenticationFailedException ex) {
+        return buildResponse("잘못된 아이디 또는 비밀번호입니다.", HttpStatus.UNAUTHORIZED);
+    }
+
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleAllException(Exception ex) {

@@ -24,13 +24,18 @@ public class User {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private UserType auth;
+    private UserType userType;
 
-    @Column(nullable = false)
     @ColumnDefault("false")
     private Boolean isDeleted; // isDeleted 값을 false로 초기화
 
     private Integer store_number;
+
+    public User(String email, String password, UserType userType) {
+        this.email = email;
+        this.password = password;
+        this.userType = userType;
+    }
 
     public void changePassword(String password) {
         this.password = password;
