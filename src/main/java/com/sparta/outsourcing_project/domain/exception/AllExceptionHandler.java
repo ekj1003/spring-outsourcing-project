@@ -56,11 +56,6 @@ public class AllExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<Map<String, Object>> tokenException(JwtException ex) {
-        return buildResponse(ex.getMessage(), HttpStatus.UNAUTHORIZED);
-    }
-
-    @ExceptionHandler
     public ResponseEntity<Map<String, Object>> exception(UserRequestException ex) {
         return buildResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
