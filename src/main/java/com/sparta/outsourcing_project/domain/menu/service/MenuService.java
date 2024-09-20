@@ -30,7 +30,7 @@ public class MenuService {
                 .orElseThrow(() -> new CannotFindStoreException());
 
         User storeOwner = store.getUser();
-        if (storeOwner == null || !storeOwner.getId().equals(userId) || storeOwner.getAuth() != UserType.OWNER) {
+        if (storeOwner == null || !storeOwner.getId().equals(userId) || storeOwner.getUserType() != UserType.OWNER) {
             throw new OwnerNotAuthorizedException();
         }
     }

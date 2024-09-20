@@ -2,6 +2,7 @@ package com.sparta.outsourcing_project.domain.review.entity;
 
 import com.sparta.outsourcing_project.domain.common.Timestamped;
 import com.sparta.outsourcing_project.domain.order.entity.Order;
+import com.sparta.outsourcing_project.domain.review.dto.ReviewRequestDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -20,12 +21,22 @@ public class Review extends Timestamped {
     @Column(length = 500)
     private String content;
 
-    private Integer Star;
+    private Integer star;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
 
 
+    public Review(Order findOrder, ReviewRequestDto reviewService) {
+        content = reviewService.getContent();
+        star = reviewService.getStar();
+        order = findOrder;
+    }
 
+    public Review patchReview(ReviewRequestDto reviewRequestDto) {
+        content = reviewRequestDto.getContent();
+        star = reviewRequestDto.getStar();
+        return this;
+    }
 }
