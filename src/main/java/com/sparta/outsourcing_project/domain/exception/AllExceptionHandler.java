@@ -22,8 +22,13 @@ public class AllExceptionHandler {
         return ResponseEntity.status(status).body(responseBody);
     }
 
-    @ExceptionHandler(CannotFindOrderId.class)
-    public ResponseEntity<Map<String, Object>> cannotFindOrderId(CannotFindOrderId ex) {
+    @ExceptionHandler(CannotFindReviewIdException.class)
+    public ResponseEntity<Map<String, Object>> ConnotFindReviewId(CannotFindReviewIdException ex) {
+        return buildResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(CannotFindOrderIdException.class)
+    public ResponseEntity<Map<String, Object>> cannotFindOrderId(CannotFindOrderIdException ex) {
         return buildResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
