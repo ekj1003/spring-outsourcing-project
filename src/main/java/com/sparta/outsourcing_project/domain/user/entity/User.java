@@ -30,7 +30,7 @@ public class User {
     @Column(nullable = false)
     private Boolean isDeleted = false; // isDeleted 값을 false로 초기화
 
-    private Integer store_number;
+    private Integer store_number = 0;
 
     public User(String email, String password, UserType userType) {
         this.email = email;
