@@ -5,7 +5,7 @@ import com.sun.jdi.request.InvalidRequestStateException;
 import java.util.Arrays;
 
 public enum UserType {
-    CUSTOMER,
+    USER,
     OWNER;
 
     public static UserType of(String type) {

@@ -1,5 +1,9 @@
 package com.sparta.outsourcing_project.domain.user.controller;
 
+import com.sparta.outsourcing_project.config.authUser.Auth;
+import com.sparta.outsourcing_project.config.authUser.AuthUser;
+import com.sparta.outsourcing_project.domain.user.dto.request.ChangePwRequestDto;
+import com.sparta.outsourcing_project.domain.user.dto.request.DeleteRequestDto;
 import com.sparta.outsourcing_project.domain.user.dto.request.LoginRequestDto;
 import com.sparta.outsourcing_project.domain.user.dto.request.SignupRequestDto;
 import com.sparta.outsourcing_project.domain.user.dto.response.TokenResponseDto;
@@ -8,10 +12,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,6 +29,18 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<TokenResponseDto> login(@Valid @RequestBody LoginRequestDto loginRequestDto) {
         return ResponseEntity.ok(userService.login(loginRequestDto));
+    }
+
+    @PatchMapping
+    public ResponseEntity<Void> changePassword(@Auth AuthUser authUser, @RequestBody ChangePwRequestDto changePwRequestDto) {
+        userService.changePassword(authUser.getId(), changePwRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteAccount(@Auth AuthUser authUser, @RequestBody DeleteRequestDto deleteRequestDto) {
+        userService.softDeleteAccount(authUser.getId(), deleteRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 }

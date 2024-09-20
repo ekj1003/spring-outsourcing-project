@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
@@ -28,7 +27,7 @@ public class User {
     private UserType userType;
 
     @Column(nullable = false)
-    private Boolean isDeleted = false; // isDeleted 값을 false로 초기화
+    private Boolean isDeleted = false;
 
     private Integer store_number = 0;
 
@@ -52,9 +51,12 @@ public class User {
         return new User(authUser.getId(), authUser.getEmail(), authUser.getUserType());
     }
 
+    public void deleteAccount() {
+        this.isDeleted = true;
+    }
+
     public void incrementStoreNumber() {
         this.store_number++;
-
     }
 
     public void decrementStoreNumber() {
