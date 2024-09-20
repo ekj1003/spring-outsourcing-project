@@ -2,24 +2,30 @@ package com.sparta.outsourcing_project.domain.order.entity;
 
 import com.sparta.outsourcing_project.domain.order.dto.OrderRequestDto;
 import com.sparta.outsourcing_project.domain.order.enums.Status;
+import com.sparta.outsourcing_project.domain.order.enums.Status;
 import com.sparta.outsourcing_project.domain.common.Timestamped;
 import com.sparta.outsourcing_project.domain.menu.entity.Menu;
+import com.sparta.outsourcing_project.domain.review.entity.Review;
 import com.sparta.outsourcing_project.domain.store.entity.Store;
 import com.sparta.outsourcing_project.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
+@Table(name="orders")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "orders")
 public class Order extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "orderId")
+    @Column(name = "order_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -36,6 +42,9 @@ public class Order extends Timestamped {
 
     private Integer price;
 
+    @Column(nullable = false)
+    private Boolean isDeleted = false; // isDeleted 값을 false로 초기화
+
     @Enumerated(EnumType.STRING)
     private Status status;
 
@@ -46,4 +55,13 @@ public class Order extends Timestamped {
         this.price = 10000;//menu.getPrice(); 임시
     }
 
+    public Order patchOrder(Menu menu) {
+        this.menu = menu;
+        return this;
+    }
+
+    public Long delete() {
+        this.isDeleted = true;
+        return id;
+    }
 }

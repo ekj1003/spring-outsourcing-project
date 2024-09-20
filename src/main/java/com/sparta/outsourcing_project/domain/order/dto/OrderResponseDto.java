@@ -19,10 +19,10 @@ public class OrderResponseDto {
 
     public OrderResponseDto(Order saveOrder) {
         this.orderId = saveOrder.getId();
-        this.storeId = saveOrder.getStore().getId();
-        this.menuId = saveOrder.getMenu().getId();
-        this.price = saveOrder.getPrice();
-        this.status = saveOrder.getStatus();
+//        this.storeId = saveOrder.getStore().getId();
+//        this.menuId = saveOrder.getMenu().getId();
+//        this.price = saveOrder.getPrice();
+//        this.status = saveOrder.getStatus();
         this.createAt = saveOrder.getCreatedAt();
         this.updateAt = saveOrder.getUpdatedAt();
     }
