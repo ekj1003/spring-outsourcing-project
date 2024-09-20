@@ -15,13 +15,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class StoreService {
+public class StoreOwnerService {
     private final StoreRepository storeRepository;
 
     @Transactional
@@ -75,13 +72,6 @@ public class StoreService {
         Store patchStore = store.patchStore(storePatchRequestDto);  // 가게 정보 수정
 
         return new StoreResponseDto(patchStore);
-    }
-
-    public List<StoreResponseDto> getStores(String storeName) {
-        List<Store> stores = storeRepository.findByNameAndIsDeletedFalse(storeName);
-        return stores.stream()
-                .map(StoreResponseDto::new) // StoreResponseDto의 생성자를 통해 변환
-                .collect(Collectors.toList());
     }
 
 }
