@@ -1,6 +1,6 @@
 package com.sparta.outsourcing_project.domain.order.service;
 
-import com.sparta.outsourcing_project.domain.exception.CannotFindOrderId;
+import com.sparta.outsourcing_project.domain.exception.CannotFindOrderIdException;
 import com.sparta.outsourcing_project.domain.order.dto.OrderPatchRequestDto;
 import com.sparta.outsourcing_project.domain.order.dto.OrderRequestDto;
 import com.sparta.outsourcing_project.domain.order.dto.OrderResponseDto;
@@ -38,9 +38,9 @@ public class OrderService {
     }
 
     public OrderResponseDto getOneOrder(Long orderId) {
-        Order findOrder = orderRepository.findById(orderId).orElseThrow(CannotFindOrderId::new);
+        Order findOrder = orderRepository.findById(orderId).orElseThrow(CannotFindOrderIdException::new);
         if(findOrder.getIsDeleted()){
-            throw new CannotFindOrderId();
+            throw new CannotFindOrderIdException();
         }
         return new OrderResponseDto(findOrder);
     }
@@ -58,7 +58,7 @@ public class OrderService {
 
     @Transactional
     public OrderResponseDto patchOrder(Long orderId, OrderPatchRequestDto orderPatchRequestDto) {
-        Order order = orderRepository.findById(orderId).orElseThrow(CannotFindOrderId::new);
+        Order order = orderRepository.findById(orderId).orElseThrow(CannotFindOrderIdException::new);
 
         // ture면 soft delete
         if (orderPatchRequestDto.getIs_deleted()) {
