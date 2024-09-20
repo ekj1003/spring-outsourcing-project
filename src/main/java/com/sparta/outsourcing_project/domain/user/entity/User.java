@@ -26,8 +26,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserType userType;
 
-    @ColumnDefault("false")
-    private Boolean isDeleted; // isDeleted 값을 false로 초기화
+    @Column(nullable = false)
+    private Boolean isDeleted = false; // isDeleted 값을 false로 초기화
 
     private Integer store_number;
 
