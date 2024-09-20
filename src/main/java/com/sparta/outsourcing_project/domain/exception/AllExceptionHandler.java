@@ -23,7 +23,7 @@ public class AllExceptionHandler {
     }
 
     @ExceptionHandler(CannotFindReviewIdException.class)
-    public ResponseEntity<Map<String, Object>> ConnotFindReviewId(CannotFindReviewIdException ex) {
+    public ResponseEntity<Map<String, Object>> cannotFindReviewId(CannotFindReviewIdException ex) {
         return buildResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
@@ -64,7 +64,7 @@ public class AllExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<Map<String, Object>> authenticationFailedException(AuthenticationFailedException ex) {
-        return buildResponse("잘못된 아이디 또는 비밀번호입니다.", HttpStatus.UNAUTHORIZED);
+        return buildResponse(ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler
@@ -85,7 +85,7 @@ public class AllExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleAllException(Exception ex) {
         log.error(ex + ": " +ex.getMessage());
-        // e.printStackTrace()
+        ex.printStackTrace();
         return new ResponseEntity<>("Error: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

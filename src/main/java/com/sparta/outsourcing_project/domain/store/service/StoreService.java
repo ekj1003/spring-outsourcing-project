@@ -9,7 +9,7 @@ import com.sparta.outsourcing_project.domain.store.dto.request.StoreRequestDto;
 import com.sparta.outsourcing_project.domain.store.dto.response.StoreResponseDto;
 import com.sparta.outsourcing_project.domain.store.entity.Store;
 import com.sparta.outsourcing_project.domain.store.repository.StoreRepository;
-import com.sparta.outsourcing_project.domain.user.dto.response.UserResponse;
+import com.sparta.outsourcing_project.domain.user.dto.response.UserResponseDto;
 import com.sparta.outsourcing_project.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -53,7 +53,7 @@ public class StoreService {
                 savedStore.getCloseAt(),
                 savedStore.getMinPrice(),
                 savedStore.getIsDeleted(),
-                new UserResponse(user.getId(), user.getEmail())
+                new UserResponseDto(user.getId(), user.getEmail())
         );
     }
 
