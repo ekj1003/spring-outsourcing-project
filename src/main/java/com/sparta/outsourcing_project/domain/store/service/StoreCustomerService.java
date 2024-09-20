@@ -30,23 +30,14 @@ public class StoreCustomerService {
     }
 
     public OneStoreResponseDto getStore(Long storeId) {
-        Store store = storeRepository.findById(storeId).orElseThrow(CannotFindStoreIdException::new);
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(CannotFindStoreIdException::new);
 
-        List<Menu> menuList = store.getMenus();
-
-        List<MenuListResponseDto> filteredMenus =  menuList.stream()
+        List<MenuListResponseDto> menuList = store.getMenus().stream()
                 .filter(menu -> !menu.getIsDeleted())
                 .map(menu -> new MenuListResponseDto(menu.getId(), menu.getName(), menu.getPrice(), menu.getDescription()))
                 .collect(Collectors.toList());
 
-        return new OneStoreResponseDto(
-                store.getId(),
-                store.getName(),
-                store.getOpenAt(),
-                store.getCloseAt(),
-                store.getMinPrice(),
-                store.getIsDeleted(),
-                filteredMenus
-        );
+        return new OneStoreResponseDto(new StoreResponseDto(store), menuList);
     }
 }
