@@ -2,7 +2,6 @@ package com.sparta.outsourcing_project.domain.store.controller;
 
 import com.sparta.outsourcing_project.config.authUser.Auth;
 import com.sparta.outsourcing_project.config.authUser.AuthUser;
-import com.sparta.outsourcing_project.domain.menu.dto.response.MenuListResponseDto;
 import com.sparta.outsourcing_project.domain.store.dto.response.OneStoreResponseDto;
 import com.sparta.outsourcing_project.domain.store.dto.response.StoreResponseDto;
 import com.sparta.outsourcing_project.domain.store.service.StoreCustomerService;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("customers/stores")
+@RequestMapping("/customers/stores")
 @RequiredArgsConstructor
 public class StoreCustomerController {
 
