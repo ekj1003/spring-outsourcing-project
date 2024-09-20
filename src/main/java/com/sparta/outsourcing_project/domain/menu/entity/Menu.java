@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Table(name = "menus")
@@ -21,6 +23,9 @@ public class Menu {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false)
     private Store store;
+
+//    @OneToMany(mappedBy = "store", fetch = FetchType.LAZY)
+//    private List<Menu> menus;
 
     @Column(length = 255)
     private String name;
