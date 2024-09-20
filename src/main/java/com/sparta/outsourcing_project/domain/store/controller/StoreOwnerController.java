@@ -36,7 +36,7 @@ public class StoreOwnerController {
     ) {
         StoreResponseDto storeResponseDto = storeService.patchStore(storeId, authUser, storePatchRequestDto);
         if (storePatchRequestDto.getIsDeleted()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // store 소프트 삭제시 204 No Content 반환
         }
         return ResponseEntity.ok(storeResponseDto);
     }
