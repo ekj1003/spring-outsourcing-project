@@ -1,5 +1,6 @@
 package com.sparta.outsourcing_project.domain.menu.service;
 
+import com.sparta.outsourcing_project.domain.menu.dto.request.MenuPatchRequest;
 import com.sparta.outsourcing_project.domain.menu.dto.request.MenuRequest;
 import com.sparta.outsourcing_project.domain.menu.dto.response.MenuResponse;
 import com.sparta.outsourcing_project.domain.menu.entity.Menu;
@@ -24,7 +25,6 @@ public class MenuService {
     private final MenuRepository menuRepository;
     private final StoreRepository storeRepository;
 
-    // Validate if the authenticated user is the owner of the store
     private void validateOwner(Long storeId, Long userId) {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new CannotFindStoreException());
@@ -49,27 +49,22 @@ public class MenuService {
     }
 
     @Transactional
-    public MenuResponse updateMenu(Long storeId, Long menuId, MenuRequest request, Long userId) {
+    public MenuResponse patchMenu(Long storeId, Long menuId, MenuPatchRequest request, Long userId) {
         validateOwner(storeId, userId);
 
         Menu menu = menuRepository.findById(menuId)
                 .orElseThrow(() -> new CannotFindMenuException());
+
+        if (request.getIsDeleted()) {
+            menu.setIsDeleted();
+            menuRepository.save(menu);
+            return null;
+        }
 
         menu.updateMenu(request.getName(), request.getPrice(), request.getDescription());
         menuRepository.save(menu);
 
         return new MenuResponse(menu);
-    }
-
-    @Transactional
-    public void deleteMenu(Long storeId, Long menuId, Boolean isDeleted, Long userId) {
-        validateOwner(storeId, userId);
-
-        Menu menu = menuRepository.findById(menuId)
-                .orElseThrow(() -> new CannotFindMenuException());
-
-        menu.setIsDeleted(isDeleted);
-        menuRepository.save(menu);
     }
 
     public List<MenuResponse> getStoreWithMenus(Long storeId) {
