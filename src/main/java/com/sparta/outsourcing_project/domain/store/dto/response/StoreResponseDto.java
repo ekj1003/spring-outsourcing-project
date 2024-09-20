@@ -15,18 +15,15 @@ public class StoreResponseDto {
     private final LocalTime openAt;
     private final LocalTime closeAt;
     private final Integer minPrice;
-    private final Boolean isDeleted;
     private final UserResponseDto user;
-    private List<MenuListResponseDto> menuList;
 
 
-    public StoreResponseDto(Long id, String name, LocalTime openAt, LocalTime closeAt, Integer minPrice, Boolean isDeleted, UserResponseDto user) {
+    public StoreResponseDto(Long id, String name, LocalTime openAt, LocalTime closeAt, Integer minPrice, UserResponseDto user) {
         this.id = id;
         this.name = name;
         this.openAt = openAt;
         this.closeAt = closeAt;
         this.minPrice = minPrice;
-        this.isDeleted = isDeleted;
         this.user = user;
     }
 
@@ -36,7 +33,6 @@ public class StoreResponseDto {
         this.openAt = store.getOpenAt();
         this.closeAt = store.getCloseAt();
         this.minPrice = store.getMinPrice();
-        this.isDeleted = store.getIsDeleted();
         this.user = new UserResponseDto(store.getUser().getId(), store.getUser().getEmail());
     }
 }
