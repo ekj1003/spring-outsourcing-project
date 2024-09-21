@@ -2,8 +2,10 @@ package com.sparta.outsourcing_project.domain.store.controller;
 
 import com.sparta.outsourcing_project.config.authUser.Auth;
 import com.sparta.outsourcing_project.config.authUser.AuthUser;
+import com.sparta.outsourcing_project.domain.store.dto.request.StoreNoticeRequestDto;
 import com.sparta.outsourcing_project.domain.store.dto.request.StorePatchRequestDto;
 import com.sparta.outsourcing_project.domain.store.dto.request.StoreRequestDto;
+import com.sparta.outsourcing_project.domain.store.dto.response.StoreNoticeResponseDto;
 import com.sparta.outsourcing_project.domain.store.dto.response.StoreResponseDto;
 import com.sparta.outsourcing_project.domain.store.service.StoreOwnerService;
 import jakarta.validation.Valid;
@@ -40,6 +42,26 @@ public class StoreOwnerController {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // store 소프트 삭제시 204 No Content 반환
         }
         return ResponseEntity.ok(storeResponseDto);
+    }
+
+    // 가게 공지 생성
+    @PostMapping("/stores/notice/{storeId}")
+    public ResponseEntity<StoreNoticeResponseDto> saveNotice (
+            @Auth AuthUser authUser,
+            @PathVariable("storeId") Long storeId,
+            @Valid @RequestBody StoreNoticeRequestDto storeNoticeRequestDto
+    ) {
+        return ResponseEntity.ok(storeOwnerService.saveNotice(authUser, storeId, storeNoticeRequestDto));
+    }
+
+    // 가게 공지 삭제
+    @DeleteMapping("/stores/{storeId}/notice/{noticeId}")
+    public ResponseEntity<Long> deleteNotice(
+            @Auth AuthUser authUser,
+            @PathVariable("storeId") Long storeId,
+            @PathVariable("noticeId") Long noticeId
+    ) {
+        return ResponseEntity.ok(storeOwnerService.deleteNotice(authUser, storeId, noticeId));
     }
 }
 
