@@ -51,7 +51,7 @@ public class AllExceptionHandler {
     }
 
     @ExceptionHandler(UnauthorizedAccessException.class)
-    public ResponseEntity<Map<String, Object>> handleUnauthorizedAccessException(UnauthorizedAccessException ex) {
+    public ResponseEntity<Map<String, Object>> UnauthorizedAccessException(UnauthorizedAccessException ex) {
         return buildResponse(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 
