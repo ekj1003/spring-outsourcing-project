@@ -7,6 +7,7 @@ import com.sparta.outsourcing_project.domain.store.dto.response.OneStoreResponse
 import com.sparta.outsourcing_project.domain.store.dto.response.StoreResponseDto;
 import com.sparta.outsourcing_project.domain.store.service.StoreCustomerService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +36,7 @@ public class StoreCustomerController {
         return ResponseEntity.ok(storeCustomerService.getStore(storeId));
     }
 
-    // 가게 즐겨찾기
+    // 가게 즐겨찾기 생성
     @PostMapping("/favorites/{storeId}")
     public ResponseEntity<FavoriteStoreResponseDto> saveFavorites (
             @Auth AuthUser authUser,
@@ -43,4 +44,14 @@ public class StoreCustomerController {
     ) {
         return ResponseEntity.ok(storeCustomerService.saveFavorites(authUser, storeId));
     }
+
+    // 가게 즐겨찾기 삭제
+    @DeleteMapping("/favorites/{storeId}")
+    public ResponseEntity<Long> deleteFavorites (
+            @Auth AuthUser authUser,
+            @PathVariable("storeId") Long storeId
+    ) {
+        return ResponseEntity.ok(storeCustomerService.deleteFavorites(authUser, storeId));
+    }
+
 }

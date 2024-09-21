@@ -1,6 +1,7 @@
 package com.sparta.outsourcing_project.domain.store.service;
 
 import com.sparta.outsourcing_project.config.authUser.AuthUser;
+import com.sparta.outsourcing_project.domain.exception.CannotFindFavoriteStoreException;
 import com.sparta.outsourcing_project.domain.exception.CannotFindStoreIdException;
 import com.sparta.outsourcing_project.domain.exception.UnauthorizedAccessException;
 import com.sparta.outsourcing_project.domain.menu.dto.response.MenuListResponseDto;
@@ -69,4 +70,17 @@ public class StoreCustomerService {
     }
 
 
+    public Long deleteFavorites(AuthUser authUser, Long storeId) {
+        User user = userRepository.findById(authUser.getId())
+                .orElseThrow(() -> new UnauthorizedAccessException("사용자를 찾을 수 없습니다."));
+
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(CannotFindStoreIdException::new);
+
+        FavoriteStore favoriteStore = favoriteStoreRepository.findByUserAndStore(user, store)
+                .orElseThrow(CannotFindFavoriteStoreException::new);
+
+        favoriteStoreRepository.delete(favoriteStore);
+        return favoriteStore.getId();
+    }
 }
