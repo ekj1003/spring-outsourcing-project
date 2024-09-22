@@ -36,16 +36,13 @@ public class User {
 
     private Integer store_number = 0;
 
+    @Column(unique = true)
+    private Long kakaoId;
+
     // 즐겨찾기 가게 목록
     @OneToMany
     @JoinColumn(name = "user_id")
     private List<Store> favoriteStores = new ArrayList<>();
-
-    public User(String email, String password, UserType userType) {
-        this.email = email;
-        this.password = password;
-        this.userType = userType;
-    }
 
     private User(Long id, String email, UserType userType) {
         this.id = id;
@@ -53,8 +50,25 @@ public class User {
         this.userType = userType;
     }
 
+    public User(String email, String password, UserType userType) {
+        this.email = email;
+        this.password = password;
+        this.userType = userType;
+    }
+
+    public User(String email, String password, UserType userType, Long kakaoId) {
+        this.email = email;
+        this.password = password;
+        this.userType = userType;
+        this.kakaoId = kakaoId;
+    }
+
     public void changePassword(String password) {
         this.password = password;
+    }
+
+    public void updateKakaoId(Long kakaoId) {
+        this.kakaoId = kakaoId;
     }
 
     public static User fromAuthUser(AuthUser authUser) {
