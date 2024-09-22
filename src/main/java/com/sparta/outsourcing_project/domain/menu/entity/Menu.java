@@ -1,11 +1,15 @@
 package com.sparta.outsourcing_project.domain.menu.entity;
 
 import com.sparta.outsourcing_project.domain.menu.enums.MenuType;
+import com.sparta.outsourcing_project.domain.menu.option.entity.Option;
 import com.sparta.outsourcing_project.domain.store.entity.Store;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -22,6 +26,10 @@ public class Menu {
     @JoinColumn(name = "store_id", nullable = false)
     private Store store;
 
+    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Option> options = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
     @Column(length = 255)
     private MenuType menuType;
 
@@ -54,5 +62,14 @@ public class Menu {
 
     public void setIsDeleted() {
         this.isDeleted = true;
+    }
+
+    public void addOption(Option option) {
+        this.options.add(option);
+        option.setMenu(this);
+    }
+
+    public void removeOption(Option option) {
+        option.setIsDeletedOption();
     }
 }

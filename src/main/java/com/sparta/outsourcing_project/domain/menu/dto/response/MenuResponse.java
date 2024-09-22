@@ -1,8 +1,12 @@
 package com.sparta.outsourcing_project.domain.menu.dto.response;
 
 import com.sparta.outsourcing_project.domain.menu.entity.Menu;
+import com.sparta.outsourcing_project.domain.menu.option.dto.response.OptionResponse;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
@@ -14,6 +18,7 @@ public class MenuResponse {
     private Integer price;
     private String description;
     private Boolean isDeleted;
+    private List<OptionResponse> options; // 추가된 부분
 
     public MenuResponse(Menu menu) {
         this.menuId = menu.getId();
@@ -23,5 +28,9 @@ public class MenuResponse {
         this.price = menu.getPrice();
         this.description = menu.getDescription();
         this.isDeleted = menu.getIsDeleted();
+        this.options = menu.getOptions().stream()
+                .filter(option -> !option.getIsDeleted())
+                .map(OptionResponse::new)
+                .collect(Collectors.toList());
     }
 }

@@ -23,27 +23,32 @@ public class Option {
     private Menu menu;
 
     @Column(length = 255)
-    private String name;
+    private String groupName;
+
+    @Column(length = 255)
+    private String detailedName;
 
     private Integer price;
-
-    @Column(length = 500)
-    private String description;
 
     @Column(nullable = false)
     private Boolean isDeleted = false;
 
-    public Option(String name, Integer price, String description) {
-        this.name = name;
+    public Option(Menu menu, String groupName, String detailedName, Integer price) {
+        this.menu = menu;
+        this.groupName = groupName;
+        this.detailedName = detailedName;
         this.price = price;
-        this.description = description;
         this.isDeleted = false;
     }
 
-    public void updateOption(String name, Integer price, String description) {
-        this.name = name;
+    public void setMenu(Menu menu) {
+        this.menu = menu;
+    }
+
+    public void updateOption(String groupName, String detailedName, Integer price) {
+        this.groupName = groupName;
+        this.detailedName = detailedName;
         this.price = price;
-        this.description = description;
     }
 
     public void setIsDeletedOption() {
