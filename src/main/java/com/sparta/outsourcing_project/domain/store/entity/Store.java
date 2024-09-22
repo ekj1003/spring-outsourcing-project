@@ -44,6 +44,7 @@ public class Store {
     @OneToMany(mappedBy = "store", fetch = FetchType.LAZY)
     private List<Menu> menus;
 
+
     public Store(String name, LocalTime openAt, LocalTime closeAt, Integer minPrice, User user) {
         this.name = name;
         this.openAt = openAt;

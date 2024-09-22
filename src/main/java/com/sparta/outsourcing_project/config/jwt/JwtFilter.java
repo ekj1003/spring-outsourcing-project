@@ -22,7 +22,7 @@ public class JwtFilter implements Filter {
 
     private final JwtUtil jwtUtil;
 
-    private static final String[] whitelist = {"/", "/users/signup", "/users/login"};
+    private static final String[] whitelist = {"/", "/users/signup", "/users/login", "/users/kakao/callback"};
 
     private boolean isLoginCheckPath(String url) {
         return !PatternMatchUtils.simpleMatch(whitelist, url);
