@@ -75,6 +75,10 @@ public class JwtFilter implements Filter {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "사업자 전용 페이지입니다.");
                 return;
             }
+            if(url.startsWith("/admin") && !userType.equals(UserType.ADMIN)) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "ADMIN 전용 페이지입니다.");
+                return;
+            }
 
             filterChain.doFilter(request, response);
         } catch (SecurityException | MalformedJwtException e) {

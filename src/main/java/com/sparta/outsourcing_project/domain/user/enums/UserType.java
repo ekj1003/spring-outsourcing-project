@@ -6,7 +6,8 @@ import java.util.Arrays;
 
 public enum UserType {
     CUSTOMER,
-    OWNER;
+    OWNER,
+    ADMIN;
 
     public static UserType of(String type) {
         return Arrays.stream(UserType.values())
