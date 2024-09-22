@@ -40,6 +40,22 @@ public class AllExceptionHandler {
         return buildResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(CannotFindNoticeIdException.class)
+    public ResponseEntity<Map<String,Object>> CannotFindNoticeIdException(CannotFindNoticeIdException ex) {
+        return buildResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Map<String, Object>> cannotFindMenuException(CannotFindMenuException ex) {
+        return buildResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Map<String, Object>> cannotFindStoreException(CannotFindStoreException ex) {
+        return buildResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+
     @ExceptionHandler(AuthException.class)
     public ResponseEntity<Map<String, Object>> authException(AuthException ex) {
         return buildResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
@@ -51,7 +67,7 @@ public class AllExceptionHandler {
     }
 
     @ExceptionHandler(UnauthorizedAccessException.class)
-    public ResponseEntity<Map<String, Object>> handleUnauthorizedAccessException(UnauthorizedAccessException ex) {
+    public ResponseEntity<Map<String, Object>> UnauthorizedAccessException(UnauthorizedAccessException ex) {
         return buildResponse(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 
@@ -63,16 +79,6 @@ public class AllExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<Map<String, Object>> authenticationFailedException(AuthenticationFailedException ex) {
         return buildResponse(ex.getMessage(), HttpStatus.UNAUTHORIZED);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<Map<String, Object>> cannotFindMenuException(CannotFindMenuException ex) {
-        return buildResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<Map<String, Object>> cannotFindStoreException(CannotFindStoreException ex) {
-        return buildResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler

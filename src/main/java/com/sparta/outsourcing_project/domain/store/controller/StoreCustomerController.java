@@ -2,15 +2,14 @@ package com.sparta.outsourcing_project.domain.store.controller;
 
 import com.sparta.outsourcing_project.config.authUser.Auth;
 import com.sparta.outsourcing_project.config.authUser.AuthUser;
+import com.sparta.outsourcing_project.domain.store.dto.response.FavoriteStoreResponseDto;
 import com.sparta.outsourcing_project.domain.store.dto.response.OneStoreResponseDto;
 import com.sparta.outsourcing_project.domain.store.dto.response.StoreResponseDto;
 import com.sparta.outsourcing_project.domain.store.service.StoreCustomerService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,10 +23,9 @@ public class StoreCustomerController {
     // 가게 다건 조회
     @GetMapping("/many/{storeName}")
     public ResponseEntity<List<StoreResponseDto>> getStores(
-            @Auth AuthUser authUser,
             @PathVariable("storeName") String storeName
     ) {
-        return ResponseEntity.ok(storeCustomerService.getStores(authUser, storeName));
+        return ResponseEntity.ok(storeCustomerService.getStores(storeName));
     }
 
     // 가게 단건 조회
@@ -37,4 +35,23 @@ public class StoreCustomerController {
     ) {
         return ResponseEntity.ok(storeCustomerService.getStore(storeId));
     }
+
+    // 가게 즐겨찾기 생성
+    @PostMapping("/favorites/{storeId}")
+    public ResponseEntity<FavoriteStoreResponseDto> saveFavorites (
+            @Auth AuthUser authUser,
+            @PathVariable("storeId") Long storeId
+    ) {
+        return ResponseEntity.ok(storeCustomerService.saveFavorites(authUser, storeId));
+    }
+
+    // 가게 즐겨찾기 삭제
+    @DeleteMapping("/favorites/{storeId}")
+    public ResponseEntity<Long> deleteFavorites (
+            @Auth AuthUser authUser,
+            @PathVariable("storeId") Long storeId
+    ) {
+        return ResponseEntity.ok(storeCustomerService.deleteFavorites(authUser, storeId));
+    }
+
 }
