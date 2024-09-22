@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MenuResponse {
     private Long menuId;
+    private String menuType;
     private Long storeId;
     private String name;
     private Integer price;
@@ -16,6 +17,7 @@ public class MenuResponse {
 
     public MenuResponse(Menu menu) {
         this.menuId = menu.getId();
+        this.menuType = menu.getMenuType().toString();
         this.storeId = menu.getStore().getId();
         this.name = menu.getName();
         this.price = menu.getPrice();

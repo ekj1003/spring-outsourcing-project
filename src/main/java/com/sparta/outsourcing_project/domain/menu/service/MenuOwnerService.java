@@ -4,11 +4,13 @@ import com.sparta.outsourcing_project.domain.menu.dto.request.MenuPatchRequest;
 import com.sparta.outsourcing_project.domain.menu.dto.request.MenuRequest;
 import com.sparta.outsourcing_project.domain.menu.dto.response.MenuResponse;
 import com.sparta.outsourcing_project.domain.menu.entity.Menu;
+import com.sparta.outsourcing_project.domain.menu.enums.MenuType;
 import com.sparta.outsourcing_project.domain.menu.repository.MenuRepository;
 import com.sparta.outsourcing_project.domain.store.entity.Store;
 import com.sparta.outsourcing_project.domain.store.repository.StoreRepository;
 import com.sparta.outsourcing_project.domain.exception.*;
 import com.sparta.outsourcing_project.domain.user.entity.User;
+import com.sparta.outsourcing_project.domain.user.enums.UserType;
 import com.sparta.outsourcing_project.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,7 +42,7 @@ public class MenuOwnerService {
         }
 
         // 메뉴 생성 및 저장
-        Menu menu = new Menu(store, request.getName(), request.getPrice(), request.getDescription());
+        Menu menu = new Menu(store, MenuType.of(request.getMenuType()), request.getName(), request.getPrice(), request.getDescription());
         menuRepository.save(menu);
 
         return new MenuResponse(menu);
@@ -74,7 +76,7 @@ public class MenuOwnerService {
         }
 
         // 메뉴 수정
-        menu.updateMenu(request.getName(), request.getPrice(), request.getDescription());
+        menu.updateMenu(MenuType.of(request.getMenuType()), request.getName(), request.getPrice(), request.getDescription());
         menuRepository.save(menu);
 
         return new MenuResponse(menu);

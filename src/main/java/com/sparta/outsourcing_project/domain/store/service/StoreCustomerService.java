@@ -35,7 +35,7 @@ public class StoreCustomerService {
 
         List<MenuListResponseDto> menuList = store.getMenus().stream()
                 .filter(menu -> !menu.getIsDeleted())
-                .map(menu -> new MenuListResponseDto(menu.getId(), menu.getName(), menu.getPrice(), menu.getDescription()))
+                .map(menu -> new MenuListResponseDto(menu.getId(), menu.getMenuType().toString(), menu.getName(), menu.getPrice(), menu.getDescription()))
                 .collect(Collectors.toList());
 
         return new OneStoreResponseDto(new StoreResponseDto(store), menuList);

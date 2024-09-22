@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class MenuRequest {
+    private String menuType;
     private String name;
     private Integer price;
     private String description;
