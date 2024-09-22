@@ -2,10 +2,8 @@ package com.sparta.outsourcing_project.domain.review.controller;
 
 import com.sparta.outsourcing_project.config.authUser.Auth;
 import com.sparta.outsourcing_project.config.authUser.AuthUser;
-import com.sparta.outsourcing_project.domain.review.dto.ReviewRequestDto;
-import com.sparta.outsourcing_project.domain.review.dto.ReviewResponseDto;
-import com.sparta.outsourcing_project.domain.review.entity.Review;
-import com.sparta.outsourcing_project.domain.review.repository.ReviewRepository;
+import com.sparta.outsourcing_project.domain.review.dto.request.ReviewRequestDto;
+import com.sparta.outsourcing_project.domain.review.dto.response.ReviewResponseDto;
 import com.sparta.outsourcing_project.domain.review.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
