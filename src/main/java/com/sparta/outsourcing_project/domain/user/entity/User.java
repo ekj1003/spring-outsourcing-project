@@ -1,5 +1,6 @@
 package com.sparta.outsourcing_project.domain.user.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.outsourcing_project.config.authUser.AuthUser;
 import com.sparta.outsourcing_project.domain.store.entity.FavoriteStore;
 import com.sparta.outsourcing_project.domain.store.entity.Store;
@@ -40,7 +41,7 @@ public class User {
     private Long kakaoId;
 
     // 즐겨찾기 가게 목록
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private List<Store> favoriteStores = new ArrayList<>();
 
