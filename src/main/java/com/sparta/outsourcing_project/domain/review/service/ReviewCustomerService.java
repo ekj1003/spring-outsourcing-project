@@ -1,10 +1,12 @@
 package com.sparta.outsourcing_project.domain.review.service;
 
 import com.sparta.outsourcing_project.config.authUser.AuthUser;
-import com.sparta.outsourcing_project.domain.exception.CannotFindOrderIdException;
+import com.sparta.outsourcing_project.domain.exception.CannotFindOrderException;
 import com.sparta.outsourcing_project.domain.exception.CannotFindReviewIdException;
+import com.sparta.outsourcing_project.domain.exception.NotArrivedException;
 import com.sparta.outsourcing_project.domain.exception.UnauthorizedAccessException;
 import com.sparta.outsourcing_project.domain.order.entity.Order;
+import com.sparta.outsourcing_project.domain.order.enums.Status;
 import com.sparta.outsourcing_project.domain.order.repository.OrderRepository;
 import com.sparta.outsourcing_project.domain.review.dto.ReviewRequestDto;
 import com.sparta.outsourcing_project.domain.review.dto.ReviewResponseDto;
@@ -20,18 +22,29 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ReviewService {
+public class ReviewCustomerService {
 
     private final ReviewRepository reviewRepository;
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
 
+
     public ReviewResponseDto createReview(AuthUser authUser, Long orderId, ReviewRequestDto reviewRequestDto) {
-        Order findOrder = orderRepository.findById(orderId).orElseThrow(CannotFindOrderIdException::new);
+        Order findOrder = orderRepository.findById(orderId).orElseThrow(CannotFindOrderException::new);
         User findUser = userRepository.findById(authUser.getId()).orElseThrow();
+
         if(findOrder.getIsDeleted()) {
-            throw new CannotFindOrderIdException();
+            throw new CannotFindOrderException();
         }
+
+        if (findOrder.getStatus() != Status.COMPLETED) {
+            throw new NotArrivedException();
+        }
+
+        if (findOrder.getUser().getId() != findUser.getId()) {
+            throw new CannotFindOrderException();
+        }
+
         return new ReviewResponseDto(reviewRepository.save(new Review(findUser, findOrder, reviewRequestDto)));
     }
 
@@ -61,4 +74,6 @@ public class ReviewService {
 
         reviewRepository.delete(findReview);
     }
+
+
 }

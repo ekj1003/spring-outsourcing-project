@@ -8,12 +8,17 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
     Order findByIdAndUserId(Long orderId, Long id);
 
     List<Order> findAllByUserId(Long userId);
+
+    List<Order> findAllByStoreId(Long id);
+
+    Order findByIdAndStoreId(Long orderId, Long storeId);
 
     Long countByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
 
@@ -26,5 +31,4 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "FROM Order o " +
             "GROUP BY FUNCTION('DATE_FORMAT', o.createdAt, '%Y-%m')")
     List<OrdersCountDto> countOrdersByMonth();
-
 }
