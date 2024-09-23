@@ -11,9 +11,10 @@ import java.util.stream.Collectors;
 @Getter
 @NoArgsConstructor
 public class MenuResponse {
+    private Long storeId;
+    private String storeName;
     private Long menuId;
     private String menuType;
-    private Long storeId;
     private String name;
     private Integer price;
     private String description;
@@ -21,9 +22,10 @@ public class MenuResponse {
     private List<OptionResponse> options; // 추가된 부분
 
     public MenuResponse(Menu menu) {
+        this.storeId = menu.getStore().getId();
+        this.storeName = menu.getStore().getName();
         this.menuId = menu.getId();
         this.menuType = menu.getMenuType().toString();
-        this.storeId = menu.getStore().getId();
         this.name = menu.getName();
         this.price = menu.getPrice();
         this.description = menu.getDescription();

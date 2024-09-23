@@ -1,7 +1,6 @@
 package com.sparta.outsourcing_project.domain.menu.enums;
 
 import com.sun.jdi.request.InvalidRequestStateException;
-
 import java.util.Arrays;
 
 public enum MenuType {

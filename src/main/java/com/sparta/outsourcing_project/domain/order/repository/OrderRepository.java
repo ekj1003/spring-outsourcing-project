@@ -48,4 +48,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "FROM orders o " +
             "GROUP BY 1", nativeQuery = true)
     List<OrdersPriceDto> getOrdersTotalPriceMonthly();
+
+    List<Order> findAllByStoreIdAndCreatedAtBetween(Long storeId, LocalDateTime startDateTime, LocalDateTime endDateTime);
 }
