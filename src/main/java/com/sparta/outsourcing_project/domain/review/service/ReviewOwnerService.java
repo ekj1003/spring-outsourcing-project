@@ -34,7 +34,7 @@ public class ReviewOwnerService {
     private final ReviewOwnerCommentRepository reviewOwnerCommentRepository;
 
     public List<ReviewResponseDto> getReviews(AuthUser authUser, Long storeId) {
-        User user = userRepository.findById(authUser.getId()).orElseThrow();
+        User user = userRepository.findById(authUser.getId()).orElseThrow(() -> new UnauthorizedAccessException("사용자를 찾을 수 없습니다."));
         Store store = storeRepository.findByIdAndUserId(storeId, user.getId());
 
         if (store == null) {

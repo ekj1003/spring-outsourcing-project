@@ -3,8 +3,8 @@ package com.sparta.outsourcing_project.domain.order.controller;
 import com.sparta.outsourcing_project.config.anno.InfoAnnotation;
 import com.sparta.outsourcing_project.config.authUser.Auth;
 import com.sparta.outsourcing_project.config.authUser.AuthUser;
+import com.sparta.outsourcing_project.domain.order.dto.OrderGetOneOrderResponseDto;
 import com.sparta.outsourcing_project.domain.order.dto.OrderPatchRequestDto;
-import com.sparta.outsourcing_project.domain.order.dto.OrderRequestDto;
 import com.sparta.outsourcing_project.domain.order.dto.OrderResponseDto;
 import com.sparta.outsourcing_project.domain.order.service.OrderCustomerService;
 import lombok.RequiredArgsConstructor;
@@ -23,15 +23,15 @@ public class OrderCustomerController {
 
     @InfoAnnotation
     @PostMapping
-    public ResponseEntity<OrderResponseDto> createOrder(@Auth AuthUser authUser, @RequestBody OrderRequestDto orderRequestDto) {
-        OrderResponseDto orderResponseDto = orderCustomerService.createOrder(authUser, orderRequestDto);
+    public ResponseEntity<OrderResponseDto> createOrder(@Auth AuthUser authUser) {
+        OrderResponseDto orderResponseDto = orderCustomerService.createOrder(authUser);
         return ResponseEntity.status(HttpStatus.OK).body(orderResponseDto);
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<OrderResponseDto> getOneOrder(@Auth AuthUser authUser, @PathVariable("orderId") Long orderId) {
-        OrderResponseDto orderResponseDto = orderCustomerService.getOneOrder(authUser, orderId);
-        return ResponseEntity.status(HttpStatus.OK).body(orderResponseDto);
+    public ResponseEntity<OrderGetOneOrderResponseDto> getOneOrder(@Auth AuthUser authUser, @PathVariable("orderId") Long orderId) {
+        OrderGetOneOrderResponseDto orderGetOneOrderResponseDto = orderCustomerService.getOneOrder(authUser, orderId);
+        return ResponseEntity.status(HttpStatus.OK).body(orderGetOneOrderResponseDto);
     }
 
     @GetMapping
@@ -42,11 +42,12 @@ public class OrderCustomerController {
 
     @InfoAnnotation
     @PatchMapping("/{orderId}")
-    public ResponseEntity<OrderResponseDto> patchOrder(@Auth AuthUser authUser, @PathVariable("orderId") Long orderId, @RequestBody OrderPatchRequestDto orderPatchRequestDto){
-        OrderResponseDto orderResponseDto = orderCustomerService.patchOrder(authUser, orderId, orderPatchRequestDto);
-        if(orderResponseDto == null) {
-            return ResponseEntity.status(HttpStatus.OK).body(null);
+    public ResponseEntity<String> patchOrder(@Auth AuthUser authUser, @PathVariable("orderId") Long orderId, @RequestBody OrderPatchRequestDto orderPatchRequestDto){
+        boolean flag = orderCustomerService.patchOrder(authUser, orderId, orderPatchRequestDto);
+        if(flag) {
+            return ResponseEntity.status(HttpStatus.OK).body("삭제하였습니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("삭제 옵션을 적어주세요");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(orderResponseDto);
     }
 }
