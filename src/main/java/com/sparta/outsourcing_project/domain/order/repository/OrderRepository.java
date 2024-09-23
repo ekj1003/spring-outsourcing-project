@@ -23,28 +23,29 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     Long countByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
 
-    @Query(value = "SELECT new com.sparta.outsourcing_project.domain.user.dto.response.OrdersCountDto(FUNCTION('DATE_FORMAT', o.createdAt, '%Y-%m-%d'), COUNT(o)) " +
-            "FROM Order o ")
+    @Query(value = "SELECT DATE_FORMAT(o.created_at, '%Y-%m-%d'), COUNT(*) " +
+            "FROM orders o " +
+            "GROUP BY DATE_FORMAT(o.created_at, '%Y-%m-%d')", nativeQuery = true)
     List<OrdersCountDto> countOrdersByDate();
 
-//    @Query("SELECT new com.sparta.outsourcing_project.domain.user.dto.response.OrdersCountDto(FUNCTION('DATE_FORMAT', o.createdAt, '%Y-%m'), COUNT(o)) " +
-//            "FROM Order o " +
-//            "GROUP BY FUNCTION('DATE_FORMAT', o.createdAt, '%Y-%m')")
-//    List<OrdersCountDto> countOrdersByMonth();
-//
-//    @Query("SELECT new com.sparta.outsourcing_project.domain.user.dto.response.OrdersPriceDto(FUNCTION('DATE_FORMAT', o.createdAt, '%Y-%m-%d'), SUM(o.price * o.quantity)) " +
-//            "FROM Order o " +
-//            "WHERE o.createdAt BETWEEN :start AND :end " +
-//            "GROUP BY FUNCTION('DATE_FORMAT', o.createdAt, '%Y-%m-%d')")
-//    List<OrdersPriceDto> getOrdersTotalPriceByDateRange(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
-//
-//    @Query("SELECT new com.sparta.outsourcing_project.domain.user.dto.response.OrdersPriceDto(FUNCTION('DATE_FORMAT', o.createdAt, '%Y-%m'), SUM(o.price * o.quantity)) " +
-//            "FROM Order o " +
-//            "GROUP BY FUNCTION('DATE_FORMAT', o.createdAt, '%Y-%m-%d')")
-//    List<OrdersPriceDto> getOrdersTotalPriceDaily();
-//
-//    @Query("SELECT new com.sparta.outsourcing_project.domain.user.dto.response.OrdersPriceDto(FUNCTION('DATE_FORMAT', o.createdAt, '%Y-%m'), SUM(o.price * o.quantity)) " +
-//            "FROM Order o " +
-//            "GROUP BY FUNCTION('DATE_FORMAT', o.createdAt, '%Y-%m')")
-//    List<OrdersPriceDto> getOrdersTotalPriceMonthly();
+    @Query(value = "SELECT DATE_FORMAT(o.created_at, '%Y-%m'), COUNT(*) " +
+            "FROM orders o " +
+            "GROUP BY DATE_FORMAT(o.created_at, '%Y-%m')", nativeQuery = true)
+    List<OrdersCountDto> countOrdersByMonth();
+
+    @Query(value = "SELECT DATE_FORMAT(o.created_at, '%Y-%m-%d'), SUM(o.price * o.quantity) " +
+            "FROM orders o " +
+            "WHERE o.created_at BETWEEN :start AND :end " +
+            "GROUP BY 1", nativeQuery = true)
+    List<OrdersPriceDto> getOrdersTotalPriceByDateRange(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+
+    @Query(value = "SELECT DATE_FORMAT(o.created_at, '%Y-%m-%d'), SUM(o.price * o.quantity) " +
+            "FROM orders o " +
+            "GROUP BY 1", nativeQuery = true)
+    List<OrdersPriceDto> getOrdersTotalPriceDaily();
+
+    @Query(value = "SELECT DATE_FORMAT(o.created_at, '%Y-%m'), SUM(o.price * o.quantity) " +
+            "FROM orders o " +
+            "GROUP BY 1", nativeQuery = true)
+    List<OrdersPriceDto> getOrdersTotalPriceMonthly();
 }

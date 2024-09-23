@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
 
 @Service
@@ -39,34 +40,38 @@ public class AdminService {
         return orderRepository.countOrdersByDate();
     }
 
-    public OrdersCountDto getOrdersCountByMonth(LocalDate date) {
-        LocalDateTime startOfDate = date.withDayOfMonth(1).atStartOfDay();
-        LocalDateTime endOfDate = date.withDayOfMonth(date.lengthOfMonth()).atTime(23, 59, 59);
+    public OrdersCountDto getOrdersCountByMonth(YearMonth date) {
+        LocalDateTime startOfDate = date.atDay(1).atStartOfDay();
+        LocalDateTime endOfDate = date.atEndOfMonth().atTime(23, 59, 59);
         Long count = orderRepository.countByCreatedAtBetween(startOfDate, endOfDate);
         return new OrdersCountDto(date.toString(), count);
     }
 
-//    public List<OrdersCountDto> getOrdersCountedMonthly() {
-//        return orderRepository.countOrdersByMonth();
-//    }
-//
-//    public OrdersPriceDto getOrdersTotalPriceByDate(LocalDate date) {
-//        LocalDateTime startOfDate = date.atStartOfDay();
-//        LocalDateTime endOfDate = startOfDate.plusDays(1);
-//        return orderRepository.getOrdersTotalPriceByDateRange(startOfDate, endOfDate).get(0);
-//    }
-//
-//    public List<OrdersPriceDto> getOrdersTotalPriceDaily() {
-//        return orderRepository.getOrdersTotalPriceDaily();
-//    }
-//
-//    public OrdersPriceDto getOrdersTotalPriceByMonth(LocalDate date) {
-//        LocalDateTime startOfDate = date.withDayOfMonth(1).atStartOfDay();
-//        LocalDateTime endOfDate = date.withDayOfMonth(date.lengthOfMonth()).atTime(23, 59, 59);
-//        return orderRepository.getOrdersTotalPriceByDateRange(startOfDate, endOfDate).get(0);
-//    }
-//
-//    public List<OrdersPriceDto> getOrdersTotalPriceMonthly() {
-//        return orderRepository.getOrdersTotalPriceMonthly();
-//    }
+    public List<OrdersCountDto> getOrdersCountedMonthly() {
+        return orderRepository.countOrdersByMonth();
+    }
+
+    public OrdersPriceDto getOrdersTotalPriceByDate(LocalDate date) {
+        LocalDateTime startOfDate = date.atStartOfDay();
+        LocalDateTime endOfDate = startOfDate.plusDays(1);
+        List<OrdersPriceDto> list = orderRepository.getOrdersTotalPriceByDateRange(startOfDate, endOfDate);
+        if(list.isEmpty()) return null;
+        return list.get(0);
+    }
+
+    public List<OrdersPriceDto> getOrdersTotalPriceDaily() {
+        return orderRepository.getOrdersTotalPriceDaily();
+    }
+
+    public OrdersPriceDto getOrdersTotalPriceByMonth(YearMonth date) {
+        LocalDateTime startOfDate = date.atDay(1).atStartOfDay();
+        LocalDateTime endOfDate = date.atEndOfMonth().atTime(23, 59, 59);
+        List<OrdersPriceDto> list = orderRepository.getOrdersTotalPriceByDateRange(startOfDate, endOfDate);
+        if(list.isEmpty()) return null;
+        return list.get(0);
+    }
+
+    public List<OrdersPriceDto> getOrdersTotalPriceMonthly() {
+        return orderRepository.getOrdersTotalPriceMonthly();
+    }
 }

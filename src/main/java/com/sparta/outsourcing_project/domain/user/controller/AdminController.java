@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,27 +36,27 @@ public class AdminController {
         return ResponseEntity.ok(adminService.getOrdersCountedDaily());
     }
 
-//    @GetMapping("/orders/counts/monthly")
-//    public ResponseEntity<?> getOrdersCountedMonthly(@RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM") LocalDate date) {
-//        if (date != null) {
-//            return ResponseEntity.ok(adminService.getOrdersCountByMonth(date));
-//        }
-//        return ResponseEntity.ok(adminService.getOrdersCountedMonthly());
-//    }
-//
-//    @GetMapping("/orders/total-prices/daily")
-//    public ResponseEntity<?> getOrdersTotalPriceDaily(@RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
-//        if (date != null) {
-//            return ResponseEntity.ok(adminService.getOrdersTotalPriceByDate(date));
-//        }
-//        return ResponseEntity.ok(adminService.getOrdersTotalPriceDaily());
-//    }
-//
-//    @GetMapping("/orders/total-prices/monthly")
-//    public ResponseEntity<?> getOrdersTotalPriceMonthly(@RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM") LocalDate date) {
-//        if (date != null) {
-//            return ResponseEntity.ok(adminService.getOrdersTotalPriceByMonth(date));
-//        }
-//        return ResponseEntity.ok(adminService.getOrdersTotalPriceMonthly());
-//    }
+    @GetMapping("/orders/counts/monthly")
+    public ResponseEntity<?> getOrdersCountedMonthly(@RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM") YearMonth date) {
+        if (date != null) {
+            return ResponseEntity.ok(adminService.getOrdersCountByMonth(date));
+        }
+        return ResponseEntity.ok(adminService.getOrdersCountedMonthly());
+    }
+
+    @GetMapping("/orders/total-prices/daily")
+    public ResponseEntity<?> getOrdersTotalPriceDaily(@RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+        if (date != null) {
+            return ResponseEntity.ok(adminService.getOrdersTotalPriceByDate(date));
+        }
+        return ResponseEntity.ok(adminService.getOrdersTotalPriceDaily());
+    }
+
+    @GetMapping("/orders/total-prices/monthly")
+    public ResponseEntity<?> getOrdersTotalPriceMonthly(@RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM") YearMonth date) {
+        if (date != null) {
+            return ResponseEntity.ok(adminService.getOrdersTotalPriceByMonth(date));
+        }
+        return ResponseEntity.ok(adminService.getOrdersTotalPriceMonthly());
+    }
 }
