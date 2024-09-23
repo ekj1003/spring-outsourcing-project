@@ -27,7 +27,7 @@ public class AdminController {
         return ResponseEntity.ok(adminService.getAllUsers(pageable));
     }
 
-    @GetMapping("/orders/count/daily")
+    @GetMapping("/orders/counts/daily")
     public ResponseEntity<?> getOrdersCountedDaily(@RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
         if (date != null) {
             return ResponseEntity.ok(adminService.getOrdersCountByDate(date));
@@ -35,11 +35,20 @@ public class AdminController {
         return ResponseEntity.ok(adminService.getOrdersCountedDaily());
     }
 
-    @GetMapping("/orders/count/monthly")
+    @GetMapping("/orders/counts/monthly")
     public ResponseEntity<?> getOrdersCountedMonthly(@RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM") LocalDate date) {
         if (date != null) {
             return ResponseEntity.ok(adminService.getOrdersCountByMonth(date));
         }
         return ResponseEntity.ok(adminService.getOrdersCountedMonthly());
     }
+
+    @GetMapping("/orders/total-prices/daily")
+    public ResponseEntity<?> getOrdersTotalPricesDaily(@RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+        if (date != null) {
+            return ResponseEntity.ok(adminService.getOrdersTotalPricesByDate(date));
+        }
+        return ResponseEntity.ok(adminService.getOrdersTotalPricesDaily());
+    }
+
 }

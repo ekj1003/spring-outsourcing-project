@@ -2,7 +2,8 @@ package com.sparta.outsourcing_project.domain.user.service;
 
 import com.sparta.outsourcing_project.domain.order.repository.OrderRepository;
 import com.sparta.outsourcing_project.domain.user.dto.response.AdminUsersDto;
-import com.sparta.outsourcing_project.domain.user.dto.response.ordersCountDto;
+import com.sparta.outsourcing_project.domain.user.dto.response.OrdersCountDto;
+import com.sparta.outsourcing_project.domain.user.dto.response.OrdersPriceDto;
 import com.sparta.outsourcing_project.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,25 +28,33 @@ public class AdminService {
     }
 
 
-    public ordersCountDto getOrdersCountByDate(LocalDate date) {
+    public OrdersCountDto getOrdersCountByDate(LocalDate date) {
         LocalDateTime startOfDate = date.atStartOfDay();
         LocalDateTime endOfDate = startOfDate.plusDays(1);
         Long count = orderRepository.countByCreatedAtBetween(startOfDate, endOfDate);
-        return new ordersCountDto(date, count);
+        return new OrdersCountDto(date, count);
     }
 
-    public List<ordersCountDto> getOrdersCountedDaily() {
+    public List<OrdersCountDto> getOrdersCountedDaily() {
         return orderRepository.countOrdersByDate();
     }
 
-    public ordersCountDto getOrdersCountByMonth(LocalDate date) {
+    public OrdersCountDto getOrdersCountByMonth(LocalDate date) {
         LocalDateTime startOfDate = date.withDayOfMonth(1).atStartOfDay();
         LocalDateTime endOfDate = date.withDayOfMonth(date.lengthOfMonth()).atTime(23, 59, 59);
         Long count = orderRepository.countByCreatedAtBetween(startOfDate, endOfDate);
-        return new ordersCountDto(date, count);
+        return new OrdersCountDto(date, count);
     }
 
-    public List<ordersCountDto> getOrdersCountedMonthly() {
+    public List<OrdersCountDto> getOrdersCountedMonthly() {
         return orderRepository.countOrdersByMonth();
+    }
+
+    public OrdersPriceDto getOrdersTotalPricesByDate(LocalDate date) {
+        return null;
+    }
+
+    public List<OrdersPriceDto> getOrdersTotalPricesDaily() {
+        return null;
     }
 }

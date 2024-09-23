@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ordersCountDto {
+public class OrdersCountDto {
     private LocalDate orderDate;
-    private long orderCount;
+    private long totalOrderCount;
 }

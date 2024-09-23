@@ -1,7 +1,7 @@
 package com.sparta.outsourcing_project.domain.order.repository;
 
 import com.sparta.outsourcing_project.domain.order.entity.Order;
-import com.sparta.outsourcing_project.domain.user.dto.response.ordersCountDto;
+import com.sparta.outsourcing_project.domain.user.dto.response.OrdersCountDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -17,14 +17,14 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     Long countByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
 
-    @Query("SELECT new com.sparta.outsourcing_project.domain.user.dto.response.ordersCountDto(CAST(o.createdAt AS date), COUNT(o)) " +
+    @Query("SELECT new com.sparta.outsourcing_project.domain.user.dto.response.OrdersCountDto(CAST(o.createdAt AS date), COUNT(o)) " +
             "FROM Order o " +
             "GROUP BY o.createdAt")
-    List<ordersCountDto> countOrdersByDate();
+    List<OrdersCountDto> countOrdersByDate();
 
-    @Query("SELECT new com.sparta.outsourcing_project.domain.user.dto.response.ordersCountDto(FUNCTION('DATE_FORMAT', o.createdAt, '%Y-%m'), COUNT(o)) " +
+    @Query("SELECT new com.sparta.outsourcing_project.domain.user.dto.response.OrdersCountDto(FUNCTION('DATE_FORMAT', o.createdAt, '%Y-%m'), COUNT(o)) " +
             "FROM Order o " +
             "GROUP BY FUNCTION('DATE_FORMAT', o.createdAt, '%Y-%m')")
-    List<ordersCountDto> countOrdersByMonth();
+    List<OrdersCountDto> countOrdersByMonth();
 
 }
