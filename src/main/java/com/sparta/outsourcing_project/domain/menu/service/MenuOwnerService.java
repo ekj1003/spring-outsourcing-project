@@ -12,7 +12,6 @@ import com.sparta.outsourcing_project.domain.store.entity.Store;
 import com.sparta.outsourcing_project.domain.store.repository.StoreRepository;
 import com.sparta.outsourcing_project.domain.exception.*;
 import com.sparta.outsourcing_project.domain.user.entity.User;
-import com.sparta.outsourcing_project.domain.user.enums.UserType;
 import com.sparta.outsourcing_project.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

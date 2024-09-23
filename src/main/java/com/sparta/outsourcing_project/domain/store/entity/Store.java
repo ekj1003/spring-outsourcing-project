@@ -1,5 +1,6 @@
 package com.sparta.outsourcing_project.domain.store.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.outsourcing_project.domain.menu.entity.Menu;
 import com.sparta.outsourcing_project.domain.order.entity.Order;
 import com.sparta.outsourcing_project.domain.store.dto.request.StorePatchRequestDto;

@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.nio.file.FileAlreadyExistsException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -104,6 +105,16 @@ public class AllExceptionHandler {
     @ExceptionHandler(NotMinPriceException.class)
     public ResponseEntity<Map<String, Object>> notMinPriceException(NotMinPriceException ex) {
         return buildResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AlreadyExistsException.class)
+    public ResponseEntity<Map<String, Object>> alreadyExistsException(AlreadyExistsException ex) {
+        return buildResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CannotFindShoppingCartException.class)
+    public ResponseEntity<Map<String, Object>> cannotFindShoppingCartException(CannotFindShoppingCartException ex) {
+        return buildResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(Exception.class)

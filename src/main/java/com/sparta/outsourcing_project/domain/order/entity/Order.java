@@ -1,14 +1,19 @@
 package com.sparta.outsourcing_project.domain.order.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.outsourcing_project.domain.order.enums.Status;
 import com.sparta.outsourcing_project.domain.common.Timestamped;
 import com.sparta.outsourcing_project.domain.menu.entity.Menu;
+import com.sparta.outsourcing_project.domain.orderDetail.entity.OrderDetail;
 import com.sparta.outsourcing_project.domain.store.entity.Store;
 import com.sparta.outsourcing_project.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -26,16 +31,10 @@ public class Order extends Timestamped {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "menu_id")
-    private Menu menu;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
     private Store store;
 
-    private Integer quantity;
-
-    private Integer price;
+    private Integer totalPrice;
 
     private Integer totalPrice;
 
@@ -45,27 +44,26 @@ public class Order extends Timestamped {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    public Order(User user, Menu menu, Store store, int price, int quantity){
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    List<OrderDetail> orderDetailList = new ArrayList<>();
+
+    public Order(User user, Store store, int totalPrice) {
         this.user = user;
-        this.menu = menu;
         this.store = store;
-        this.price = price;
-        this.quantity = quantity;
-        this.status = Status.ORDERED;
+        this.totalPrice = totalPrice;
     }
 
-    public Order patchOrder(Menu menu) {
-        this.menu = menu;
+    public void updateOrderDetailList(List<OrderDetail> orderDetailList) {
+        this.orderDetailList = orderDetailList;
+    }
+
+    public Order updateStatus(Status status) {
+        this.status = status;
         return this;
     }
 
     public Long delete() {
         this.isDeleted = true;
         return id;
-    }
-
-    public Order updateStatus(Status status) {
-        this.status = status;
-        return this;
     }
 }

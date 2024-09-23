@@ -1,8 +1,6 @@
 package com.sparta.outsourcing_project.domain.menu.option.entity;
 
 import com.sparta.outsourcing_project.domain.menu.entity.Menu;
-import com.sparta.outsourcing_project.domain.menu.enums.MenuType;
-import com.sparta.outsourcing_project.domain.store.entity.Store;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -43,12 +41,6 @@ public class Option {
 
     public void setMenu(Menu menu) {
         this.menu = menu;
-    }
-
-    public void updateOption(String groupName, String detailedName, Integer price) {
-        this.groupName = groupName;
-        this.detailedName = detailedName;
-        this.price = price;
     }
 
     public void setIsDeletedOption() {

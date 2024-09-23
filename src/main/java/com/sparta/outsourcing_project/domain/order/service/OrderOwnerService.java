@@ -3,6 +3,7 @@ package com.sparta.outsourcing_project.domain.order.service;
 import com.sparta.outsourcing_project.config.authUser.AuthUser;
 import com.sparta.outsourcing_project.domain.exception.CannotFindOrderException;
 import com.sparta.outsourcing_project.domain.exception.CannotFindStoreException;
+import com.sparta.outsourcing_project.domain.exception.UnauthorizedAccessException;
 import com.sparta.outsourcing_project.domain.order.dto.OrderOwnerPatchRequestDto;
 import com.sparta.outsourcing_project.domain.order.dto.OrderResponseDto;
 import com.sparta.outsourcing_project.domain.order.entity.Order;
@@ -28,7 +29,7 @@ public class OrderOwnerService {
     private final StoreRepository storeRepository;
 
     public List<OrderResponseDto> getAllOrders(AuthUser authUser) {
-        User user = userRepository.findById(authUser.getId()).orElseThrow();
+        User user = userRepository.findById(authUser.getId()).orElseThrow(() -> new UnauthorizedAccessException("사용자를 찾을 수 없습니다."));
         List<Store> storeList = storeRepository.findAllByUserId(user.getId());
         List<Order> allOrderList = new ArrayList<>();
         for (Store store : storeList) {
@@ -41,7 +42,7 @@ public class OrderOwnerService {
 
     @Transactional
     public OrderResponseDto patchOrder(AuthUser authUser, Long orderId, Long storeId, OrderOwnerPatchRequestDto orderOwnerPatchRequestDto) {
-        User user = userRepository.findById(authUser.getId()).orElseThrow();
+        User user = userRepository.findById(authUser.getId()).orElseThrow(() -> new UnauthorizedAccessException("사용자를 찾을 수 없습니다."));
         Store store = storeRepository.findById(storeId).orElseThrow(CannotFindStoreException::new);
         if (store.getUser().getId() != user.getId()) {
             throw new CannotFindStoreException();
