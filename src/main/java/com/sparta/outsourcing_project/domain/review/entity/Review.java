@@ -2,7 +2,7 @@ package com.sparta.outsourcing_project.domain.review.entity;
 
 import com.sparta.outsourcing_project.domain.common.Timestamped;
 import com.sparta.outsourcing_project.domain.order.entity.Order;
-import com.sparta.outsourcing_project.domain.review.dto.request.ReviewRequestDto;
+import com.sparta.outsourcing_project.domain.review.dto.ReviewRequestDto;
 import com.sparta.outsourcing_project.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

@@ -30,8 +30,8 @@ public class AllExceptionHandler {
         return buildResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(CannotFindOrderIdException.class)
-    public ResponseEntity<Map<String, Object>> cannotFindOrderId(CannotFindOrderIdException ex) {
+    @ExceptionHandler(CannotFindOrderException.class)
+    public ResponseEntity<Map<String, Object>> cannotFindOrderId(CannotFindOrderException ex) {
         return buildResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
@@ -94,6 +94,16 @@ public class AllExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<Map<String, Object>> handleValidationException(MethodArgumentNotValidException ex) {
         return buildResponse(Objects.requireNonNull(ex.getBindingResult().getFieldError()).getDefaultMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NotArrivedException.class)
+    public ResponseEntity<Map<String, Object>> notArrivedException(NotArrivedException ex) {
+        return buildResponse(ex.getMessage(), HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    @ExceptionHandler(NotMinPriceException.class)
+    public ResponseEntity<Map<String, Object>> notMinPriceException(NotMinPriceException ex) {
+        return buildResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)

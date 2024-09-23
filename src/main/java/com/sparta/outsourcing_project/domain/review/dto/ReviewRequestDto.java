@@ -1,4 +1,4 @@
-package com.sparta.outsourcing_project.domain.review.dto.request;
+package com.sparta.outsourcing_project.domain.review.dto;
 
 import lombok.Getter;
 
