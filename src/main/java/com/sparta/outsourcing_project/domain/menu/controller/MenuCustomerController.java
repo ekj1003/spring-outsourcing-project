@@ -12,20 +12,20 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/customers/stores")
+@RequestMapping("/customers/stores/{storeId}/menus")
 @RequiredArgsConstructor
 public class MenuCustomerController {
     private final MenuCustomerService menuCustomerService;
 
     // Retrieve Store with Menus
-    @GetMapping("/{storeId}/menus")
+    @GetMapping
     public ResponseEntity<List<MenuResponse>> getStoreWithMenus(@PathVariable Long storeId, @Auth AuthUser authUser) {
         List<MenuResponse> menus = menuCustomerService.getStoreWithMenus(storeId, authUser.getId());
         return ResponseEntity.ok(menus);
     }
 
     // 메뉴를 타입별로 조회
-    @GetMapping("/{storeId}/menus/types")
+    @GetMapping("/types")
     public ResponseEntity<List<MenuListResponseDto>> getMenusByType(
             @PathVariable Long storeId,
             @RequestParam("menuType") String menuType) {
