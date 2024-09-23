@@ -33,6 +33,8 @@ public class Order extends Timestamped {
     @JoinColumn(name = "store_id")
     private Store store;
 
+    private Integer quantity;
+
     private Integer price;
 
     @Column(nullable = false)
@@ -41,11 +43,12 @@ public class Order extends Timestamped {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    public Order(User user, Menu menu, Store store, int price){
+    public Order(User user, Menu menu, Store store, int price, int quantity){
         this.user = user;
         this.menu = menu;
         this.store = store;
         this.price = price;
+        this.quantity = quantity;
         this.status = Status.ORDERED;
     }
 
@@ -57,5 +60,10 @@ public class Order extends Timestamped {
     public Long delete() {
         this.isDeleted = true;
         return id;
+    }
+
+    public Order updateStatus(Status status) {
+        this.status = status;
+        return this;
     }
 }

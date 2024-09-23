@@ -25,7 +25,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class OrderService {
+public class OrderCustomerService {
 
     private final OrderRepository orderRepository;
     private final ReviewRepository reviewRepository;
@@ -46,9 +46,14 @@ public class OrderService {
             throw new NotOpenException();
         }
 
-        int price = menu.getPrice();
+        // 최저 금액인지 확인하기
+        if (menu.getPrice() * orderRequestDto.getQuantity() < store.getMinPrice()) {
+            throw new NotMinPriceException(store.getMinPrice() , menu.getPrice() * orderRequestDto.getQuantity());
+        }
 
-        Order order = new Order(user, menu, store, price);
+        int price = menu.getPrice() * orderRequestDto.getQuantity();
+
+        Order order = new Order(user, menu, store, price, orderRequestDto.getQuantity());
 
         return new OrderResponseDto(orderRepository.save(order));
     }
@@ -56,7 +61,7 @@ public class OrderService {
     public OrderResponseDto getOneOrder(AuthUser authUser, Long orderId) {
         Order findOrder = orderRepository.findByIdAndUserId(orderId, authUser.getId());
         if(findOrder.getIsDeleted()){
-            throw new CannotFindOrderIdException();
+            throw new CannotFindOrderException();
         }
         return new OrderResponseDto(findOrder);
     }
@@ -74,7 +79,7 @@ public class OrderService {
 
     @Transactional
     public OrderResponseDto patchOrder(AuthUser authUser, Long orderId, OrderPatchRequestDto orderPatchRequestDto) {
-        Order order = orderRepository.findById(orderId).orElseThrow(CannotFindOrderIdException::new);
+        Order order = orderRepository.findById(orderId).orElseThrow(CannotFindOrderException::new);
 
         if (authUser.getId() != order.getUser().getId()) {
             throw new UnauthorizedAccessException("작성자가 아닙니다.");
