@@ -34,7 +34,7 @@ public class OrderCustomerService {
     private final StoreRepository storeRepository;
 
     public OrderResponseDto createOrder(AuthUser authUser, OrderRequestDto orderRequestDto) {
-        User user = userRepository.findById(authUser.getId()).orElseThrow();
+        User user = userRepository.findById(authUser.getId()).orElseThrow(() -> new UnauthorizedAccessException("사용자를 찾을 수 없습니다."));
         Menu menu = menuRepository.findByIdAndStoreId(orderRequestDto.getMenuId(), orderRequestDto.getStoreId());
         if (menu == null) {
             throw new CannotFindMenuException();

@@ -31,7 +31,7 @@ public class ReviewCustomerService {
 
     public ReviewResponseDto createReview(AuthUser authUser, Long orderId, ReviewRequestDto reviewRequestDto) {
         Order findOrder = orderRepository.findById(orderId).orElseThrow(CannotFindOrderException::new);
-        User findUser = userRepository.findById(authUser.getId()).orElseThrow();
+        User findUser = userRepository.findById(authUser.getId()).orElseThrow(() -> new UnauthorizedAccessException("사용자를 찾을 수 없습니다."));
 
         if(findOrder.getIsDeleted()) {
             throw new CannotFindOrderException();
