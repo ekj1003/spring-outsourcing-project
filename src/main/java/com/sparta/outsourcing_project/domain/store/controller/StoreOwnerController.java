@@ -2,9 +2,12 @@ package com.sparta.outsourcing_project.domain.store.controller;
 
 import com.sparta.outsourcing_project.config.authUser.Auth;
 import com.sparta.outsourcing_project.config.authUser.AuthUser;
+import com.sparta.outsourcing_project.domain.store.dto.request.StoreDailyDashboardRequestDto;
 import com.sparta.outsourcing_project.domain.store.dto.request.StoreNoticeRequestDto;
 import com.sparta.outsourcing_project.domain.store.dto.request.StorePatchRequestDto;
 import com.sparta.outsourcing_project.domain.store.dto.request.StoreRequestDto;
+import com.sparta.outsourcing_project.domain.store.dto.response.StoreDashboardResponseDto;
+import com.sparta.outsourcing_project.domain.store.dto.request.StoreMonthlyDashboardRequestDto;
 import com.sparta.outsourcing_project.domain.store.dto.response.StoreNoticeResponseDto;
 import com.sparta.outsourcing_project.domain.store.dto.response.StoreResponseDto;
 import com.sparta.outsourcing_project.domain.store.service.StoreOwnerService;
@@ -15,14 +18,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/owners")
+@RequestMapping("/owners/stores")
 @RequiredArgsConstructor
 public class StoreOwnerController {
 
     private final StoreOwnerService storeOwnerService;
 
     // 가게 생성
-    @PostMapping("/stores")
+    @PostMapping
     public ResponseEntity<StoreResponseDto> saveStore(
             @Auth AuthUser authUser,
             @Valid @RequestBody StoreRequestDto storeRequestDto
@@ -31,7 +34,7 @@ public class StoreOwnerController {
     }
 
     // 가게 수정
-    @PatchMapping("/stores/{storeId}")
+    @PatchMapping("/{storeId}")
     public ResponseEntity<StoreResponseDto> patchStore (
             @Auth AuthUser authUser,
             @PathVariable("storeId") Long storeId,
@@ -45,7 +48,7 @@ public class StoreOwnerController {
     }
 
     // 가게 공지 생성
-    @PostMapping("/stores/notice/{storeId}")
+    @PostMapping("/notice/{storeId}")
     public ResponseEntity<StoreNoticeResponseDto> saveNotice (
             @Auth AuthUser authUser,
             @PathVariable("storeId") Long storeId,
@@ -55,13 +58,32 @@ public class StoreOwnerController {
     }
 
     // 가게 공지 삭제
-    @DeleteMapping("/stores/{storeId}/notice/{noticeId}")
+    @DeleteMapping("/{storeId}/notice/{noticeId}")
     public ResponseEntity<Long> deleteNotice(
             @Auth AuthUser authUser,
             @PathVariable("storeId") Long storeId,
             @PathVariable("noticeId") Long noticeId
     ) {
         return ResponseEntity.ok(storeOwnerService.deleteNotice(authUser, storeId, noticeId));
+    }
+
+    // 가게 일별 대시보드 조회
+    @GetMapping("/dashboard/daily")
+    public ResponseEntity<StoreDashboardResponseDto> getDailyDashboard (
+            @Auth AuthUser authUser,
+            @Valid @RequestBody StoreDailyDashboardRequestDto storeDayDashboardRequestDto
+    ) {
+        return ResponseEntity.ok(storeOwnerService.getDailyDashboard(authUser, storeDayDashboardRequestDto));
+
+    }
+
+    // 가게 월별 대시보드 조회
+    @GetMapping("/dashboard/monthly")
+    public ResponseEntity<StoreDashboardResponseDto> getMonthlyDashboard (
+            @Auth AuthUser authUser,
+            @Valid @RequestBody StoreMonthlyDashboardRequestDto storeMonthlyDashboardRequestDto
+    ) {
+        return ResponseEntity.ok(storeOwnerService.getMonthlyDashboard(authUser, storeMonthlyDashboardRequestDto));
     }
 }
 
