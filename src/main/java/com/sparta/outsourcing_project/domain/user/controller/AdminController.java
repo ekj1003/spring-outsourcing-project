@@ -44,11 +44,18 @@ public class AdminController {
     }
 
     @GetMapping("/orders/total-prices/daily")
-    public ResponseEntity<?> getOrdersTotalPricesDaily(@RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+    public ResponseEntity<?> getOrdersTotalPriceDaily(@RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
         if (date != null) {
-            return ResponseEntity.ok(adminService.getOrdersTotalPricesByDate(date));
+            return ResponseEntity.ok(adminService.getOrdersTotalPriceByDate(date));
         }
-        return ResponseEntity.ok(adminService.getOrdersTotalPricesDaily());
+        return ResponseEntity.ok(adminService.getOrdersTotalPriceDaily());
     }
 
+    @GetMapping("/orders/total-prices/monthly")
+    public ResponseEntity<?> getOrdersTotalPriceMonthly(@RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM") LocalDate date) {
+        if (date != null) {
+            return ResponseEntity.ok(adminService.getOrdersTotalPriceByMonth(date));
+        }
+        return ResponseEntity.ok(adminService.getOrdersTotalPriceMonthly());
+    }
 }
