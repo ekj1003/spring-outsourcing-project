@@ -4,6 +4,5 @@ import lombok.Getter;
 
 @Getter
 public class OrderPatchRequestDto {
-    private Long menuId;
     private Boolean is_deleted = false;
 }

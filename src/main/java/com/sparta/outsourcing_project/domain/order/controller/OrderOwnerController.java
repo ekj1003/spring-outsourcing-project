@@ -1,5 +1,6 @@
 package com.sparta.outsourcing_project.domain.order.controller;
 
+import com.sparta.outsourcing_project.config.anno.InfoAnnotation;
 import com.sparta.outsourcing_project.config.authUser.Auth;
 import com.sparta.outsourcing_project.config.authUser.AuthUser;
 import com.sparta.outsourcing_project.domain.order.dto.OrderOwnerPatchRequestDto;
@@ -25,6 +26,7 @@ public class OrderOwnerController {
         return ResponseEntity.status(HttpStatus.OK).body(orders);
     }
 
+    @InfoAnnotation
     @PatchMapping("/{orderId}/stores/{storeId}")
     public ResponseEntity<OrderResponseDto> patchOrder(@Auth AuthUser authUser, @PathVariable("orderId") Long orderId, @PathVariable("storeId") Long storeId, @RequestBody OrderOwnerPatchRequestDto orderOwnerPatchRequestDto){
         OrderResponseDto orderResponseDto = orderOwnerService.patchOrder(authUser, orderId, storeId, orderOwnerPatchRequestDto);
