@@ -2,8 +2,11 @@ package com.sparta.outsourcing_project.domain.user.service;
 
 import com.sparta.outsourcing_project.config.PasswordEncoder;
 import com.sparta.outsourcing_project.config.jwt.JwtUtil;
+import com.sparta.outsourcing_project.domain.exception.UnauthorizedAccessException;
 import com.sparta.outsourcing_project.domain.exception.UserRequestException;
 import com.sparta.outsourcing_project.domain.exception.AuthenticationFailedException;
+import com.sparta.outsourcing_project.domain.user.dto.request.ChangePwRequestDto;
+import com.sparta.outsourcing_project.domain.user.dto.request.DeleteRequestDto;
 import com.sparta.outsourcing_project.domain.user.dto.request.LoginRequestDto;
 import com.sparta.outsourcing_project.domain.user.dto.request.SignupRequestDto;
 import com.sparta.outsourcing_project.domain.user.dto.response.TokenResponseDto;
@@ -15,6 +18,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -23,6 +29,22 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+
+    private User getUser(Long userId) {
+        return userRepository.findById(userId).orElseThrow(
+                AuthenticationFailedException::new
+        );
+    }
+
+    private boolean isCorrectPassword(User user, String password) {
+        return passwordEncoder.matches(password, user.getPassword());
+    }
+
+    private void validateNewPassword(String newPassword) {
+        if (newPassword.length() < 8 || !newPassword.matches("^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$")) {
+            throw new UserRequestException("비밀번호는 대소문자 포함 영문 + 숫자 + 특수문자 최소 1글자씩 포함합니다.");
+        }
+    }
 
     @Transactional
     public TokenResponseDto signup(@Valid SignupRequestDto signupRequestDto) {
@@ -36,15 +58,36 @@ public class UserService {
         return new TokenResponseDto(jwtToken);
     }
 
-    @Transactional
     public TokenResponseDto login(@Valid LoginRequestDto loginRequestDto) {
         User user = userRepository.findByEmail(loginRequestDto.getEmail()).orElseThrow(
                 AuthenticationFailedException::new
         );
+        if(user.getIsDeleted()) {
+            throw new UnauthorizedAccessException("이미 삭제된 계정입니다.");
+        }
         if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
             throw new AuthenticationFailedException();
         }
         String jwtToken = jwtUtil.generateToken(user.getId(), user.getEmail(), user.getUserType());
         return new TokenResponseDto(jwtToken);
+    }
+
+    @Transactional
+    public void softDeleteAccount(Long userId, DeleteRequestDto deleteRequestDto) {
+        User user = getUser(userId);
+        if(!Objects.equals(user.getEmail(), deleteRequestDto.getEmail()) || !isCorrectPassword(user, deleteRequestDto.getPassword())) {
+            throw new AuthenticationFailedException();
+        }
+        user.deleteAccount();
+    }
+
+    @Transactional
+    public void changePassword(Long userId, ChangePwRequestDto changePwRequestDto) {
+        validateNewPassword(changePwRequestDto.getNewPassword());
+        User user = getUser(userId);
+        if(!isCorrectPassword(user, changePwRequestDto.getOldPassword())) {
+            throw new AuthenticationFailedException("틀린 비밀번호입니다.");
+        }
+        user.changePassword(passwordEncoder.encode(changePwRequestDto.getNewPassword()));
     }
 }

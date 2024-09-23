@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalTime;
+import java.util.List;
 
 
 @Entity
@@ -39,6 +40,10 @@ public class Store {
 
     @Column(nullable = false)
     private Boolean isDeleted = false; //isDeleted 값을 false로 초기화
+
+    @OneToMany(mappedBy = "store", fetch = FetchType.LAZY)
+    private List<Menu> menus;
+
 
     public Store(String name, LocalTime openAt, LocalTime closeAt, Integer minPrice, User user) {
         this.name = name;
