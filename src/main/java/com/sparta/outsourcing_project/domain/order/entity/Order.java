@@ -37,6 +37,8 @@ public class Order extends Timestamped {
 
     private Integer price;
 
+    private Integer totalPrice;
+
     @Column(nullable = false)
     private Boolean isDeleted = false; // isDeleted 값을 false로 초기화
 
