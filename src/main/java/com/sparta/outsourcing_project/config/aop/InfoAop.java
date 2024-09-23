@@ -1,16 +1,12 @@
 package com.sparta.outsourcing_project.config.aop;
 
-import com.sparta.outsourcing_project.domain.order.dto.OrderRequestDto;
-import jakarta.servlet.http.HttpServletRequest;
+import com.sparta.outsourcing_project.config.authUser.AuthUser;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -32,7 +28,7 @@ public class InfoAop {
 
         // 메서드 인자 가져오기
         Object[] args = joinPoint.getArgs();
-        OrderRequestDto orderRequestDto = (OrderRequestDto)args[1];
+        AuthUser user = (AuthUser) args[0];
 
         try {
             Object result = joinPoint.proceed();
@@ -40,8 +36,7 @@ public class InfoAop {
         } finally {
             // 측정 완료
             log.info("::: API 요청 시각: {}ms", currentTime);
-            log.info("::: Menu Id: {}", orderRequestDto.getMenuId());
-            log.info("::: Store Id: {}", orderRequestDto.getStoreId());
+            log.info("::: User Id: {}", user.getId());
         }
     }
 

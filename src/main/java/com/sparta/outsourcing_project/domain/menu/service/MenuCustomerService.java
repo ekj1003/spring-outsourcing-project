@@ -1,7 +1,9 @@
 package com.sparta.outsourcing_project.domain.menu.service;
 
+import com.sparta.outsourcing_project.domain.menu.dto.response.MenuListResponseDto;
 import com.sparta.outsourcing_project.domain.menu.dto.response.MenuResponse;
 import com.sparta.outsourcing_project.domain.menu.entity.Menu;
+import com.sparta.outsourcing_project.domain.menu.enums.MenuType;
 import com.sparta.outsourcing_project.domain.menu.repository.MenuRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,16 @@ public class MenuCustomerService {
         List<Menu> menus = menuRepository.findAllByStoreIdAndIsDeletedFalse(storeId);
         return menus.stream()
                 .map(MenuResponse::new)
+                .collect(Collectors.toList());
+    }
+
+    // 특정 가게에서 메뉴 타입별로 조회하는 메서드
+    public List<MenuListResponseDto> getMenusByType(Long storeId, String menuType) {
+        MenuType type = MenuType.of(menuType); // 문자열을 Enum으로 변환
+        List<Menu> menus = menuRepository.findByStoreIdAndMenuTypeAndIsDeletedFalse(storeId, type);
+
+        return menus.stream()
+                .map(menu -> new MenuListResponseDto(menu.getId(), menu.getMenuType().toString(), menu.getName(), menu.getPrice(), menu.getDescription()))
                 .collect(Collectors.toList());
     }
 }

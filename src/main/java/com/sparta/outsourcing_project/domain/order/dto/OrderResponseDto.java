@@ -11,8 +11,7 @@ public class OrderResponseDto {
 
     private Long orderId;
     private Long storeId;
-    private Long menuId;
-    private Integer price;
+    private Integer totalPrice;
     private Status status;
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
@@ -20,8 +19,7 @@ public class OrderResponseDto {
     public OrderResponseDto(Order saveOrder) {
         this.orderId = saveOrder.getId();
         this.storeId = saveOrder.getStore().getId();
-        this.menuId = saveOrder.getMenu().getId();
-        this.price = saveOrder.getPrice();
+        this.totalPrice = saveOrder.getTotalPrice();
         this.status = saveOrder.getStatus();
         this.createAt = saveOrder.getCreatedAt();
         this.updateAt = saveOrder.getUpdatedAt();
