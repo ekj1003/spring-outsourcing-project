@@ -46,7 +46,7 @@ class UserControllerTest {
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new UserControllerTest()).setCustomArgumentResolvers(authUserArgumentResolver).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(new UserController(userService)).setCustomArgumentResolvers(authUserArgumentResolver).build();
         authUser = new AuthUser(1L, "email@email.com", UserType.CUSTOMER);
     }
 
@@ -71,7 +71,7 @@ class UserControllerTest {
     @Test
     void 비밀번호_변경_성공() throws Exception{
         // given
-        ChangePwRequestDto dto = new ChangePwRequestDto("aaaa1111*", "bbbb1111*");
+        ChangePwRequestDto dto = new ChangePwRequestDto("Aaaa1111*", "Bbbb1111*");
         given(authUserArgumentResolver.supportsParameter(any())).willReturn(true);
         given(authUserArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(authUser);
         doNothing().when(userService).changePassword(anyLong(), any(ChangePwRequestDto.class));
