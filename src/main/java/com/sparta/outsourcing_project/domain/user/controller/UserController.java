@@ -31,16 +31,15 @@ public class UserController {
         return ResponseEntity.ok(userService.login(loginRequestDto));
     }
 
-    @PatchMapping
-    public ResponseEntity<Void> changePassword(@Auth AuthUser authUser, @RequestBody ChangePwRequestDto changePwRequestDto) {
-        userService.changePassword(authUser.getId(), changePwRequestDto);
+    @PostMapping("/{userId}/change-pw")
+    public ResponseEntity<Void> changePassword(@Auth AuthUser authUser, @PathVariable Long userId, @RequestBody ChangePwRequestDto changePwRequestDto) {
+        userService.changePassword(authUser.getId(), userId, changePwRequestDto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> deleteAccount(@Auth AuthUser authUser, @RequestBody DeleteRequestDto deleteRequestDto) {
-        userService.softDeleteAccount(authUser.getId(), deleteRequestDto);
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Void> deleteAccount(@Auth AuthUser authUser, @PathVariable Long userId, @RequestBody DeleteRequestDto deleteRequestDto) {
+        userService.softDeleteAccount(authUser.getId(), userId, deleteRequestDto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
-
 }

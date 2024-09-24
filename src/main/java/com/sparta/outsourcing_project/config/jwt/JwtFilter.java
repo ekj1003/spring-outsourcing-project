@@ -67,16 +67,12 @@ public class JwtFilter implements Filter {
 
             UserType userType = UserType.valueOf(claims.get("userType", String.class));
 
-            if(url.startsWith("/customers") && !userType.equals(UserType.CUSTOMER)) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "손님 전용 페이지입니다.");
+            if (userType.equals(UserType.ADMIN)) {
+                filterChain.doFilter(request, response);
                 return;
             }
-            if(url.startsWith("/owners") && !userType.equals(UserType.OWNER)) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "사업자 전용 페이지입니다.");
-                return;
-            }
-            if(url.startsWith("/admin") && !userType.equals(UserType.ADMIN)) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "ADMIN 전용 페이지입니다.");
+            if(!userType.canAccess(url)) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "접근 불가능한 페이지입니다.");
                 return;
             }
 
