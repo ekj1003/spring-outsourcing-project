@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +21,6 @@ import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class SearchKeywordCustomerService {
 
     private final StoreRepository storeRepository;
@@ -63,6 +61,7 @@ public class SearchKeywordCustomerService {
     }
 
     // 검색어 저장 및 갱신 처리
+    @Transactional
     public void saveSearchKeyword(String keyword) {
         SearchKeyword searchKeyword = searchKeywordRepository.findByKeyword(keyword)
                 .orElse(new SearchKeyword(keyword));
@@ -82,12 +81,6 @@ public class SearchKeywordCustomerService {
         LocalDateTime oneHourAgo = LocalDateTime.now().minusHours(1);
         List<SearchKeyword> keywords = searchKeywordRepository.findRecentTop10(oneHourAgo);
 
-        // 만약 검색어가 없거나 시간이 지났으면 모든 검색어를 초기화
-        if (keywords.isEmpty()) {
-            resetAllSearchCounts();
-            return Collections.emptyList();
-        }
-
         // 상위 10개의 검색어만 리스트에 포함
         List<SearchKeyword> top10Keywords = keywords.stream()
                 .limit(10) // 상위 10개로 제한
@@ -102,11 +95,6 @@ public class SearchKeywordCustomerService {
                     return result;
                 })
                 .collect(Collectors.toList());
-    }
-
-    // 모든 검색어의 카운트를 초기화하는 메서드
-    private void resetAllSearchCounts() {
-        searchKeywordRepository.resetAllSearchCounts(LocalDateTime.now());
     }
 
     @Transactional
