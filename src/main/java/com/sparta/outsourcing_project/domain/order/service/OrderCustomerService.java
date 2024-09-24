@@ -34,8 +34,6 @@ public class OrderCustomerService {
     private final OrderRepository orderRepository;
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
-    private final MenuRepository menuRepository;
-    private final StoreRepository storeRepository;
     private final ShoppingCartRepository shoppingCartRepository;
     private final OrderDetailRepository orderDetailRepository;
 
@@ -44,6 +42,7 @@ public class OrderCustomerService {
         // 장바구니에서 목록 불러오기
         List<ShoppingCart> shoppingCartList = shoppingCartRepository.findAllByUserId(authUser.getId());
 
+        // 장바구니가 비어있다면 예외를 출력합니다.
         if (shoppingCartList.isEmpty()) {
             throw new CannotFindShoppingCartException();
         }
@@ -56,8 +55,8 @@ public class OrderCustomerService {
             throw new NotOpenException();
         }
 
+        // 주문 총액을 구하기
         int totalPrice = 0;
-
         for (ShoppingCart shoppingCart : shoppingCartList) {
             totalPrice += shoppingCart.getPrice() * shoppingCart.getQuantity();
         }
@@ -79,10 +78,6 @@ public class OrderCustomerService {
         // 주문에 주문 상세 저장하기
         order.updateOrderDetailList(orderDetailList);
 
-        for (OrderDetail orderDetail : order.getOrderDetailList()) {
-            System.out.println(orderDetail.getMenu().getName());
-        }
-
         // 주문 상태
         order.updateStatus(Status.ORDERED);
 
@@ -96,7 +91,9 @@ public class OrderCustomerService {
 
     public OrderGetOneOrderResponseDto getOneOrder(AuthUser authUser, Long orderId) {
         Order findOrder = orderRepository.findByIdAndUserId(orderId, authUser.getId());
-        if(findOrder.getIsDeleted()){
+
+        // 주문이 없거나 주문이 삭제되어 있다면 예외 발생
+        if( findOrder == null || findOrder.getIsDeleted()){
             throw new CannotFindOrderException();
         }
         return new OrderGetOneOrderResponseDto(findOrder);

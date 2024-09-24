@@ -21,6 +21,12 @@ public class OrderCustomerController {
 
     private final OrderCustomerService orderCustomerService;
 
+    /**
+     * 주문을 생성합니다.
+     * 장바구니에 있는 음식을들 주문하기 때문에 다른 값을 받지 않습니다.
+     * @param authUser
+     * @return OrderResponseDto
+     */
     @InfoAnnotation
     @PostMapping
     public ResponseEntity<OrderResponseDto> createOrder(@Auth AuthUser authUser) {
@@ -28,18 +34,38 @@ public class OrderCustomerController {
         return ResponseEntity.status(HttpStatus.OK).body(orderResponseDto);
     }
 
+    /**
+     * 주문 한개를 가져옵니다.
+     * 주문 다건 조회와 다른점은 주문 상세정보가 출력됩니다.
+     * @param authUser
+     * @param orderId
+     * @return OrderGetOneOrderResponseDto
+     */
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderGetOneOrderResponseDto> getOneOrder(@Auth AuthUser authUser, @PathVariable("orderId") Long orderId) {
         OrderGetOneOrderResponseDto orderGetOneOrderResponseDto = orderCustomerService.getOneOrder(authUser, orderId);
         return ResponseEntity.status(HttpStatus.OK).body(orderGetOneOrderResponseDto);
     }
 
+    /**
+     * 주문 다건 조회합니다.
+     * @param authUser
+     * @return List<OrderResponseDto>
+     */
     @GetMapping
     public ResponseEntity<List<OrderResponseDto>> getAllOrder(@Auth AuthUser authUser) {
         List<OrderResponseDto> orders = orderCustomerService.getAllOrders(authUser);
         return ResponseEntity.status(HttpStatus.OK).body(orders);
     }
 
+    /**
+     * 주문을 삭제합니다.
+     * 삭제를 실패하면 flag에 false값이 들어가 삭제 옵션을 적어달라는 문장이 나옴
+     * @param authUser
+     * @param orderId
+     * @param orderPatchRequestDto
+     * @return String
+     */
     @InfoAnnotation
     @PatchMapping("/{orderId}")
     public ResponseEntity<String> patchOrder(@Auth AuthUser authUser, @PathVariable("orderId") Long orderId, @RequestBody OrderPatchRequestDto orderPatchRequestDto){
