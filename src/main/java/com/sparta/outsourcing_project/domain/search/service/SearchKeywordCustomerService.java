@@ -66,13 +66,8 @@ public class SearchKeywordCustomerService {
         SearchKeyword searchKeyword = searchKeywordRepository.findByKeyword(keyword)
                 .orElse(new SearchKeyword(keyword));
 
-        // 만약 1시간 이상 업데이트되지 않았다면 카운트 초기화
-        if (searchKeyword.isExpired()) {
-            searchKeyword.resetCount();
-        }
-
-        // 카운트 증가
         searchKeyword.incrementCount();
+
         searchKeywordRepository.save(searchKeyword);
     }
 
