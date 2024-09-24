@@ -35,15 +35,4 @@ public class SearchKeyword {
         this.count++;
         this.updatedAt = LocalDateTime.now(); // 갱신 시점 업데이트
     }
-
-    // 초기화 메서드
-    public void resetCount() {
-        this.count = 0;
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    // 1시간 이상 지났는지 확인하는 메서드
-    public boolean isExpired() {
-        return updatedAt.isBefore(LocalDateTime.now().minusHours(1));
-    }
 }
