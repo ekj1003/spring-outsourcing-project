@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.outsourcing_project.config.authUser.AuthUser;
 import com.sparta.outsourcing_project.config.authUser.AuthUserArgumentResolver;
 import com.sparta.outsourcing_project.domain.user.dto.request.ChangePwRequestDto;
+import com.sparta.outsourcing_project.domain.user.dto.request.DeleteRequestDto;
 import com.sparta.outsourcing_project.domain.user.dto.request.LoginRequestDto;
 import com.sparta.outsourcing_project.domain.user.dto.response.TokenResponseDto;
 import com.sparta.outsourcing_project.domain.user.enums.UserType;
@@ -23,8 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -81,5 +81,22 @@ class UserControllerTest {
                 .content(objectMapper.writeValueAsString(dto))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void 계정_삭제_성공() throws Exception{
+        // given
+        Long userId = 1L;
+        DeleteRequestDto dto = new DeleteRequestDto("email@email.com", "password1234*");
+        given(authUserArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(authUserArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(authUser);
+        doNothing().when(userService).softDeleteAccount(anyLong(), any(DeleteRequestDto.class));
+
+        // when & then
+        mockMvc.perform(delete("/users/{userId}", userId)
+                .content(objectMapper.writeValueAsString(dto))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
     }
 }
