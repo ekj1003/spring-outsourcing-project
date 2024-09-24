@@ -68,10 +68,8 @@ public class SearchKeywordCustomerService {
 
         searchKeyword.incrementCount();
 
-        // 변경된 정보를 저장
         searchKeywordRepository.save(searchKeyword);
     }
-
 
     public List<Map<String, Object>> getTopSearchKeywords() {
         List<SearchKeyword> top10Keywords = searchKeywordRepository.findTop10ByOrderByCountDesc();
