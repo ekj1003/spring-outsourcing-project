@@ -1,7 +1,11 @@
 package com.sparta.outsourcing_project.domain.user.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.outsourcing_project.domain.user.dto.response.AdminUsersDto;
+import com.sparta.outsourcing_project.domain.user.dto.response.OrderCountDtoInterface;
+import com.sparta.outsourcing_project.domain.user.dto.response.OrderPriceDtoInterface;
+import com.sparta.outsourcing_project.domain.user.dto.response.OrdersCountDto;
 import com.sparta.outsourcing_project.domain.user.entity.User;
 import com.sparta.outsourcing_project.domain.user.enums.UserType;
 import com.sparta.outsourcing_project.domain.user.service.AdminService;
@@ -18,14 +22,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-
 
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -59,17 +61,112 @@ class AdminControllerTest {
     @Nested
     class OrdersCount {
         @Test
-        void 일별_총_주문_수_조회_성공() {
+        void 일별_총_주문_수_조회_성공_파라미터O() throws Exception {
             // given
             LocalDate date = LocalDate.now();
+            OrdersCountDto dto = new OrdersCountDto(date.toString(), 1);
+            given(adminService.getOrdersCountByDate(date)).willReturn(dto);
 
+            // when & then
+            mockMvc.perform(get("/admin/orders/counts/daily")
+                    .param("date", String.valueOf(date)))
+                    .andExpect(status().isOk());
 
-            // when
+        }
 
+        @Test
+        void 일별_총_주문_수_조회_성공_파라미터X() throws Exception {
+            // given
+            LocalDate date = LocalDate.now();
+            OrdersCountDto dto = new OrdersCountDto(date.toString(), 1);
+            List<OrderCountDtoInterface> dtos = new ArrayList<>();
+            given(adminService.getOrdersCountedDaily()).willReturn(dtos);
 
-            // then
+            // when & then
+            mockMvc.perform(get("/admin/orders/counts/daily"))
+                    .andExpect(status().isOk());
 
+        }
 
+        @Test
+        void 월별_총_주문_수_조회_성공_파라미터O() throws Exception {
+            // given
+            YearMonth date = YearMonth.now();
+            OrdersCountDto dto = new OrdersCountDto(date.toString(), 1);
+            given(adminService.getOrdersCountByMonth(date)).willReturn(dto);
+
+            // when & then
+            mockMvc.perform(get("/admin/orders/counts/monthly")
+                            .param("date", String.valueOf(date)))
+                    .andExpect(status().isOk());
+
+        }
+
+        @Test
+        void 월별_총_주문_수_조회_성공_파라미터X() throws Exception {
+            // given
+            YearMonth date = YearMonth.now();
+            OrdersCountDto dto = new OrdersCountDto(date.toString(), 1);
+            List<OrderCountDtoInterface> dtos = new ArrayList<>();
+            given(adminService.getOrdersCountedDaily()).willReturn(dtos);
+
+            // when & then
+            mockMvc.perform(get("/admin/orders/counts/monthly"))
+                    .andExpect(status().isOk());
+
+        }
+    }
+
+    @Nested
+    class OrdersTotalPrices {
+        @Test
+        void 일별_총_주문_금액_조회_성공_파라미터O() throws Exception {
+            // given
+            LocalDate date = LocalDate.now();
+            OrderPriceDtoInterface dto = null;
+            given(adminService.getOrdersTotalPriceByDate(date)).willReturn(dto);
+
+            // when & then
+            mockMvc.perform(get("/admin/orders/total-prices/daily")
+                            .param("date", String.valueOf(date)))
+                    .andExpect(status().isOk());
+        }
+
+        @Test
+        void 일별_총_주문_금액_조회_성공_파라미터X() throws Exception {
+            // given
+            LocalDate date = LocalDate.now();
+            List<OrderPriceDtoInterface> dtos = new ArrayList<>();
+            given(adminService.getOrdersTotalPriceDaily()).willReturn(dtos);
+
+            // when & then
+            mockMvc.perform(get("/admin/orders/total-prices/daily"))
+                    .andExpect(status().isOk());
+        }
+
+        @Test
+        void 월별_총_주문_금액_조회_성공_파라미터O() throws Exception {
+            // given
+            YearMonth date = YearMonth.now();
+            OrderPriceDtoInterface dto = null;
+            given(adminService.getOrdersTotalPriceByMonth(date)).willReturn(dto);
+
+            // when & thenYearMonth
+            mockMvc.perform(get("/admin/orders/total-prices/monthly")
+                            .param("date", String.valueOf(date)))
+                    .andExpect(status().isOk());
+        }
+
+        @Test
+        void 월별_총_주문_금액_조회_성공_파라미터X() throws Exception {
+            // given
+            YearMonth date = YearMonth.now();
+            List<OrderPriceDtoInterface> dtos = new ArrayList<>();
+            given(adminService.getOrdersTotalPriceMonthly()).willReturn(dtos);
+
+            // when & then
+            mockMvc.perform(get("/admin/orders/total-prices/monthly"))
+                    .andExpect(status().isOk());
         }
     }
 }
