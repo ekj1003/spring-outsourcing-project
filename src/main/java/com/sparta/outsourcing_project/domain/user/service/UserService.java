@@ -46,6 +46,12 @@ public class UserService {
         }
     }
 
+    private void verifyUserId(Long authUserId, Long userId) {
+        if (!Objects.equals(authUserId, userId)) {
+            throw new AuthenticationFailedException("본인만 작업을 수행할 수 있습니다.");
+        }
+    }
+
     @Transactional
     public TokenResponseDto signup(@Valid SignupRequestDto signupRequestDto) {
         if(userRepository.existsByEmail(signupRequestDto.getEmail())) {
@@ -73,21 +79,23 @@ public class UserService {
     }
 
     @Transactional
-    public void softDeleteAccount(Long userId, DeleteRequestDto deleteRequestDto) {
-        User user = getUser(userId);
-        if(!Objects.equals(user.getEmail(), deleteRequestDto.getEmail()) || !isCorrectPassword(user, deleteRequestDto.getPassword())) {
-            throw new AuthenticationFailedException();
-        }
-        user.deleteAccount();
-    }
-
-    @Transactional
-    public void changePassword(Long userId, ChangePwRequestDto changePwRequestDto) {
+    public void changePassword(Long authUserId, Long userId, ChangePwRequestDto changePwRequestDto) {
+        verifyUserId(authUserId, userId);
         validateNewPassword(changePwRequestDto.getNewPassword());
-        User user = getUser(userId);
+        User user = getUser(authUserId);
         if(!isCorrectPassword(user, changePwRequestDto.getOldPassword())) {
             throw new AuthenticationFailedException("틀린 비밀번호입니다.");
         }
         user.changePassword(passwordEncoder.encode(changePwRequestDto.getNewPassword()));
+    }
+
+    @Transactional
+    public void softDeleteAccount(Long authUserId, Long userId, DeleteRequestDto deleteRequestDto) {
+        verifyUserId(authUserId, userId);
+        User user = getUser(authUserId);
+        if(!Objects.equals(user.getEmail(), deleteRequestDto.getEmail()) || !isCorrectPassword(user, deleteRequestDto.getPassword())) {
+            throw new AuthenticationFailedException();
+        }
+        user.deleteAccount();
     }
 }
