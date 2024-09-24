@@ -3,8 +3,6 @@ package com.sparta.outsourcing_project.domain.order.repository;
 import com.sparta.outsourcing_project.domain.order.entity.Order;
 import com.sparta.outsourcing_project.domain.user.dto.response.OrderCountDtoInterface;
 import com.sparta.outsourcing_project.domain.user.dto.response.OrderPriceDtoInterface;
-import com.sparta.outsourcing_project.domain.user.dto.response.OrdersCountDto;
-import com.sparta.outsourcing_project.domain.user.dto.response.OrdersPriceDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
