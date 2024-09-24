@@ -1,9 +1,7 @@
 package com.sparta.outsourcing_project.domain.user.service;
 
 import com.sparta.outsourcing_project.domain.order.repository.OrderRepository;
-import com.sparta.outsourcing_project.domain.user.dto.response.AdminUsersDto;
-import com.sparta.outsourcing_project.domain.user.dto.response.OrdersCountDto;
-import com.sparta.outsourcing_project.domain.user.dto.response.OrdersPriceDto;
+import com.sparta.outsourcing_project.domain.user.dto.response.*;
 import com.sparta.outsourcing_project.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -36,7 +34,7 @@ public class AdminService {
         return new OrdersCountDto(date.toString(), count);
     }
 
-    public List<OrdersCountDto> getOrdersCountedDaily() {
+    public List<OrderCountDtoInterface> getOrdersCountedDaily() {
         return orderRepository.countOrdersByDate();
     }
 
@@ -47,31 +45,31 @@ public class AdminService {
         return new OrdersCountDto(date.toString(), count);
     }
 
-    public List<OrdersCountDto> getOrdersCountedMonthly() {
+    public List<OrderCountDtoInterface> getOrdersCountedMonthly() {
         return orderRepository.countOrdersByMonth();
     }
 
-    public OrdersPriceDto getOrdersTotalPriceByDate(LocalDate date) {
+    public OrderPriceDtoInterface getOrdersTotalPriceByDate(LocalDate date) {
         LocalDateTime startOfDate = date.atStartOfDay();
         LocalDateTime endOfDate = startOfDate.plusDays(1);
-        List<OrdersPriceDto> list = orderRepository.getOrdersTotalPriceByDateRange(startOfDate, endOfDate);
+        List<OrderPriceDtoInterface> list = orderRepository.getOrdersTotalPriceByDateRange(startOfDate, endOfDate);
         if(list.isEmpty()) return null;
         return list.get(0);
     }
 
-    public List<OrdersPriceDto> getOrdersTotalPriceDaily() {
+    public List<OrderPriceDtoInterface> getOrdersTotalPriceDaily() {
         return orderRepository.getOrdersTotalPriceDaily();
     }
 
-    public OrdersPriceDto getOrdersTotalPriceByMonth(YearMonth date) {
+    public OrderPriceDtoInterface getOrdersTotalPriceByMonth(YearMonth date) {
         LocalDateTime startOfDate = date.atDay(1).atStartOfDay();
         LocalDateTime endOfDate = date.atEndOfMonth().atTime(23, 59, 59);
-        List<OrdersPriceDto> list = orderRepository.getOrdersTotalPriceByDateRange(startOfDate, endOfDate);
+        List<OrderPriceDtoInterface> list = orderRepository.getOrdersTotalPriceByDateRange(startOfDate, endOfDate);
         if(list.isEmpty()) return null;
         return list.get(0);
     }
 
-    public List<OrdersPriceDto> getOrdersTotalPriceMonthly() {
+    public List<OrderPriceDtoInterface> getOrdersTotalPriceMonthly() {
         return orderRepository.getOrdersTotalPriceMonthly();
     }
 }

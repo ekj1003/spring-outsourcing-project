@@ -10,9 +10,9 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class OrdersPriceDto {
     private String orderDate;
-    private Long totalPrice;
+    private Integer totalPrice;
 
-    public OrdersPriceDto(String orderDate, long totalPrice) {
+    public OrdersPriceDto(String orderDate, Integer totalPrice) {
         this.orderDate = orderDate;
         this.totalPrice = totalPrice;
     }
