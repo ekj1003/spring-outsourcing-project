@@ -77,14 +77,7 @@ public class SearchKeywordCustomerService {
     }
 
     public List<Map<String, Object>> getTopSearchKeywords() {
-        // 1시간 내에 업데이트된 검색어만 가져옴
-        LocalDateTime oneHourAgo = LocalDateTime.now().minusHours(1);
-        List<SearchKeyword> keywords = searchKeywordRepository.findRecentTop10(oneHourAgo);
-
-        // 상위 10개의 검색어만 리스트에 포함
-        List<SearchKeyword> top10Keywords = keywords.stream()
-                .limit(10) // 상위 10개로 제한
-                .collect(Collectors.toList());
+        List<SearchKeyword> top10Keywords = searchKeywordRepository.findTop10ByOrderByCountDesc();
 
         // 검색어와 순위를 반환
         return IntStream.range(0, top10Keywords.size())
