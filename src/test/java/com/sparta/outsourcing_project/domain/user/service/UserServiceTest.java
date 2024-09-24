@@ -59,6 +59,7 @@ class UserServiceTest {
     @Test
     void 계정_삭제_성공() {
         // given
+        Long authUserId = 1L;
         Long userId = 1L;
         DeleteRequestDto deleteRequestDto = new DeleteRequestDto("email@email.com", "password");
         User user = new User("email@email.com", "password", UserType.CUSTOMER);
@@ -68,7 +69,7 @@ class UserServiceTest {
         given(passwordEncoder.matches(anyString(), anyString())).willReturn(true);
 
         // when
-        userService.softDeleteAccount(userId, deleteRequestDto);
+        userService.softDeleteAccount(authUserId, userId, deleteRequestDto);
 
         // then
         assertEquals(user.getIsDeleted(), true);
@@ -77,6 +78,7 @@ class UserServiceTest {
     @Test
     void 계정_삭제_실패() {
         // given
+        Long authUserId = 1L;
         Long userId = 1L;
         DeleteRequestDto deleteRequestDto = new DeleteRequestDto("email@email.com", "password");
         User user = new User("email@email.com", "wrongPW", UserType.CUSTOMER);
@@ -87,12 +89,13 @@ class UserServiceTest {
 
         // when & then
         assertThrows(AuthenticationFailedException.class,
-                () -> userService.softDeleteAccount(userId, deleteRequestDto));
+                () -> userService.softDeleteAccount(authUserId, userId, deleteRequestDto));
     }
 
     @Test
     void 비밀번호_변경_성공() {
         // given
+        Long authUserId = 1L;
         Long userId = 1L;
         ChangePwRequestDto changePwRequestDto = new ChangePwRequestDto("aaaa1111*", "bbbb1111*");
         User user = new User("email@email.com", "aaaa1111*", UserType.CUSTOMER);
@@ -101,7 +104,7 @@ class UserServiceTest {
         given(passwordEncoder.matches(anyString(), anyString())).willReturn(true);
 
         // when
-        userService.changePassword(userId, changePwRequestDto);
+        userService.changePassword(authUserId, userId, changePwRequestDto);
 
         // then
         assertEquals(user.getPassword(), passwordEncoder.encode(changePwRequestDto.getNewPassword()));

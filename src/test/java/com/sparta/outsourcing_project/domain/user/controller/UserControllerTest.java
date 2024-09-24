@@ -71,13 +71,14 @@ class UserControllerTest {
     @Test
     void 비밀번호_변경_성공() throws Exception{
         // given
+        Long userId = 1L;
         ChangePwRequestDto dto = new ChangePwRequestDto("Aaaa1111*", "Bbbb1111*");
         given(authUserArgumentResolver.supportsParameter(any())).willReturn(true);
         given(authUserArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(authUser);
-        doNothing().when(userService).changePassword(anyLong(), any(ChangePwRequestDto.class));
+        doNothing().when(userService).changePassword(anyLong(), anyLong(), any(ChangePwRequestDto.class));
 
         // when & then
-        mockMvc.perform(patch("/users")
+        mockMvc.perform(post("/users/{userId}/change-pw", userId)
                 .content(objectMapper.writeValueAsString(dto))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -90,7 +91,7 @@ class UserControllerTest {
         DeleteRequestDto dto = new DeleteRequestDto("email@email.com", "password1234*");
         given(authUserArgumentResolver.supportsParameter(any())).willReturn(true);
         given(authUserArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(authUser);
-        doNothing().when(userService).softDeleteAccount(anyLong(), any(DeleteRequestDto.class));
+        doNothing().when(userService).softDeleteAccount(anyLong(), anyLong(), any(DeleteRequestDto.class));
 
         // when & then
         mockMvc.perform(delete("/users/{userId}", userId)
