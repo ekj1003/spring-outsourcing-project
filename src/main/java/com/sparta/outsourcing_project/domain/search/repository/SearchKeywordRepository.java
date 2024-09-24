@@ -16,10 +16,6 @@ public interface SearchKeywordRepository extends JpaRepository<SearchKeyword, Lo
     // 검색 횟수가 많은 상위 10개의 검색어 조회
     List<SearchKeyword> findTop10ByOrderByCountDesc();
 
-    // 1시간 내에 업데이트된 인기 검색어 조회
-    @Query("SELECT sk FROM SearchKeyword sk WHERE sk.updatedAt >= :threshold ORDER BY sk.count DESC")
-    List<SearchKeyword> findRecentTop10(@Param("threshold") LocalDateTime threshold);
-
     // 모든 검색어 초기화
     @Modifying
     @Query("UPDATE SearchKeyword sk SET sk.count = 0, sk.updatedAt = :now")
