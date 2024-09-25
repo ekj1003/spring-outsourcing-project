@@ -33,9 +33,9 @@ public class Review extends Timestamped {
     private User user;
 
 
-    public Review(User newUser, Order findOrder, ReviewRequestDto reviewService) {
-        content = reviewService.getContent();
-        star = reviewService.getStar();
+    public Review(User newUser, Order findOrder, ReviewRequestDto reviewRequestDto) {
+        content = reviewRequestDto.getContent();
+        star = reviewRequestDto.getStar();
         order = findOrder;
         user = newUser;
     }
