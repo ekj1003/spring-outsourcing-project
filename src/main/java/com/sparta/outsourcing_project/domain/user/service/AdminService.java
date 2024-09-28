@@ -34,7 +34,7 @@ public class AdminService {
         return new OrdersCountDto(date.toString(), count);
     }
 
-    public List<OrderCountDtoInterface> getOrdersCountedDaily() {
+    public List<OrdersCountDto> getOrdersCountedDaily() {
         return orderRepository.countOrdersByDate();
     }
 
@@ -45,31 +45,31 @@ public class AdminService {
         return new OrdersCountDto(date.toString(), count);
     }
 
-    public List<OrderCountDtoInterface> getOrdersCountedMonthly() {
+    public List<OrdersCountDto> getOrdersCountedMonthly() {
         return orderRepository.countOrdersByMonth();
     }
 
-    public OrderPriceDtoInterface getOrdersTotalPriceByDate(LocalDate date) {
+    public OrdersPriceDto getOrdersTotalPriceByDate(LocalDate date) {
         LocalDateTime startOfDate = date.atStartOfDay();
         LocalDateTime endOfDate = startOfDate.plusDays(1);
-        List<OrderPriceDtoInterface> list = orderRepository.getOrdersTotalPriceByDateRange(startOfDate, endOfDate);
+        List<OrdersPriceDto> list = orderRepository.getOrdersTotalPriceByDateRange(startOfDate, endOfDate);
         if(list.isEmpty()) return null;
         return list.get(0);
     }
 
-    public List<OrderPriceDtoInterface> getOrdersTotalPriceDaily() {
+    public List<OrdersPriceDto> getOrdersTotalPriceDaily() {
         return orderRepository.getOrdersTotalPriceDaily();
     }
 
-    public OrderPriceDtoInterface getOrdersTotalPriceByMonth(YearMonth date) {
+    public OrdersPriceDto getOrdersTotalPriceByMonth(YearMonth date) {
         LocalDateTime startOfDate = date.atDay(1).atStartOfDay();
         LocalDateTime endOfDate = date.atEndOfMonth().atTime(23, 59, 59);
-        List<OrderPriceDtoInterface> list = orderRepository.getOrdersTotalPriceByDateRange(startOfDate, endOfDate);
+        List<OrdersPriceDto> list = orderRepository.getOrdersTotalPriceByDateRange(startOfDate, endOfDate);
         if(list.isEmpty()) return null;
         return list.get(0);
     }
 
-    public List<OrderPriceDtoInterface> getOrdersTotalPriceMonthly() {
+    public List<OrdersPriceDto> getOrdersTotalPriceMonthly() {
         return orderRepository.getOrdersTotalPriceMonthly();
     }
 }

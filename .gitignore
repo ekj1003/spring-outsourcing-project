@@ -38,3 +38,5 @@ out/
 
 # Ignore all .properties files
 **/*.properties
+
+/src/main/generated/

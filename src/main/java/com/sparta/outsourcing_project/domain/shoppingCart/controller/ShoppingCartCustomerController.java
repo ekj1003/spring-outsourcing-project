@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/customers/shppingcart")
+@RequestMapping("/customers/shopping-cart")
 @RequiredArgsConstructor
 public class ShoppingCartCustomerController {
 
@@ -27,7 +27,7 @@ public class ShoppingCartCustomerController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ShoppingCartResponseDto>> getAllShoppringCart(@Auth AuthUser authUser) {
+    public ResponseEntity<List<ShoppingCartResponseDto>> getAllShoppingCart(@Auth AuthUser authUser) {
         List<ShoppingCartResponseDto> shoppingCartResponseDtoList = shoppingCartService.getAllShoppringCart(authUser);
         return ResponseEntity.status(HttpStatus.OK).body(shoppingCartResponseDtoList);
     }
