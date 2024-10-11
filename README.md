@@ -151,4 +151,4 @@ https://documenter.getpostman.com/view/37562373/2sAXqwXez4
     - 리뷰는 가게 정보를 기준으로 다건 조회 가능하며, 최신순으로 정렬합니다.
     - 리뷰를 별점 범위에 따라 조회할 수 있습니다.
         - ex) 3~5점
-
+`
